@@ -6,4 +6,4 @@
 
 ## Weekly Reports
 
-[Week 1](https://github.com/JoJoensuu/TiRaLab/blob/main/ViikkoRaportit/vko1.md)
+[Week 1](https://github.com/JoJoensuu/TiRaLab/blob/main/docs/ViikkoRaportit/vko1.md)
