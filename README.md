@@ -1,5 +1,9 @@
 # TiRaLab
 
+## Coverage
+
+[![codecov](https://codecov.io/gh/JoJoensuu/TiRaLab/graph/badge.svg?token=LKWGX2VQ4Q)](https://codecov.io/gh/JoJoensuu/TiRaLab)
+
 ## Documentation
 
 [Specification document](https://github.com/JoJoensuu/TiRaLab/blob/main/docs/specif.md)
