@@ -22,9 +22,11 @@ jobs:
 
     - name: Install Dependencies
       run: npm install
+      working-directory: ./tictactoe
 
     - name: Run Tests and Collect Coverage
-      run: npm run test
+      run: npm test
+      working-directory: ./tictactoe
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
