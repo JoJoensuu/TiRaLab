@@ -1,14 +1,16 @@
-import './App.css'
+import GameBoard from './components/GameBoard';
 
 function App() {
-
   return (
-      <div>
+    <div className="App">
+      <header className="App-header">
         <p>
-          Helloooo
+          Welcome to Tic-Tac-Toe
         </p>
-      </div>
-  )
+        <GameBoard />
+      </header>
+    </div>
+  );
 }
 
 export default App
