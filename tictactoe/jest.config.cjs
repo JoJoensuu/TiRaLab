@@ -4,4 +4,5 @@ module.exports = {
     '\\.(css|less)$': '<rootDir>/__mocks__/styleMock.js',
   },
   testEnvironment: 'jsdom',
+  coverageReporters: ['json', 'lcov', 'text', 'clover'],
 }
