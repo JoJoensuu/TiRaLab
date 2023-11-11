@@ -1,25 +1,25 @@
-import { useState } from 'react'
-import './GameBoard.css'
+import { useState } from 'react';
+import './GameBoard.css';
 
 const GameBoard = () => {
-  const initialBoardState = Array(3).fill(null).map(() => Array(3).fill(null))
-  const [board, setBoard] = useState(initialBoardState)
-  const [currentPlayer, setCurrentPlayer] = useState('X')
+  const initialBoardState = Array(3).fill(null).map(() => Array(3).fill(null));
+  const [board, setBoard] = useState(initialBoardState);
+  const [currentPlayer, setCurrentPlayer] = useState('X');
 
   const handleCellClick = (rowIndex, colIndex) => {
     if (board[rowIndex][colIndex] !== null) {
-      return
+      return;
     }
 
 
     const updatedBoard = board.map((row, rIdx) =>
       row.map((cell, cIdx) =>
-        rIdx === rowIndex && cIdx === colIndex ? currentPlayer : cell))
+        rIdx === rowIndex && cIdx === colIndex ? currentPlayer : cell));
 
-    setBoard(updatedBoard)
+    setBoard(updatedBoard);
 
-    setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X')
-  }
+    setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
+  };
 
   return (
     <div className="game-board" data-testid="gameboard">
@@ -29,6 +29,7 @@ const GameBoard = () => {
             <button
               key={`${rowIndex}-${colIndex}`}
               className="cell"
+              data-testid={`cell-${rowIndex}-${colIndex}`}
               onClick={() => handleCellClick(rowIndex, colIndex)}>
               {cell}
             </button>
@@ -36,7 +37,7 @@ const GameBoard = () => {
         </div>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default GameBoard
+export default GameBoard;
