@@ -11,13 +11,14 @@ const GameBoard = () => {
       return;
     }
 
-
+    // Set the cell to the current player's symbol
     const updatedBoard = board.map((row, rIdx) =>
       row.map((cell, cIdx) =>
         rIdx === rowIndex && cIdx === colIndex ? currentPlayer : cell));
 
     setBoard(updatedBoard);
 
+    // Switch the player
     setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
   };
 
