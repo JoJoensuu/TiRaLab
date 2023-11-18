@@ -40,7 +40,7 @@ module.exports = {
     "arrow-spacing": [
         "error", { "before": true, "after": true }
     ],
-    "no-console": 0,
+    "no-console": "error",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": 0,
     "no-unused-vars": 0    

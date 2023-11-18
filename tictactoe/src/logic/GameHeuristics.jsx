@@ -21,12 +21,12 @@ const checkVertical = (board, row, col, currentPlayer) => {
   // Check up
   for (let i = row - 1; i >= 0 && board[i][col] === currentPlayer; i--) {
     count++;
-    if (count >= 5) return true;
+    if (count >= 5) return true; // Win condition met
   }
-
+  // Check down
   for (let i = row + 1; i < board[col].length && board[i][col] === currentPlayer; i++) {
     count++;
-    if (count >= 5) return true;
+    if (count >= 5) return true; // Win condition met
   }
   return false;
 };

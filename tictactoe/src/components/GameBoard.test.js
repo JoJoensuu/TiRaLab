@@ -1,9 +1,28 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import GameBoard from './GameBoard';
+import * as gameHeuristics from '../logic/GameHeuristics';
+
+jest.mock('../logic/AI', () => ({
+  makeAIMove: jest.fn()
+}));
 
 describe('GameBoard component', () => {
+  beforeEach(() => {
+    // Clear all mocks before each test
+    jest.clearAllMocks();
+
+    // Reset the mock to return true
+    jest.spyOn(gameHeuristics, 'checkForWin').mockReturnValue(true);
+  });
+
+  afterEach(() => {
+    // Restore the original implementation after each test
+    gameHeuristics.checkForWin.mockRestore();
+  });
+
+  window.alert = jest.fn();
 
   test('render GameBoard component on screen', () => {
     render(<GameBoard />);
@@ -17,14 +36,15 @@ describe('GameBoard component', () => {
     expect(firstCell.textContent).toBe('X');
   });
 
-  test('alternates turns between X and O', () => {
+  test('resets the board after a win', async () => {
     render(<GameBoard />);
-    const firstCell = screen.getByTestId('cell-0-0');
-    const secondCell = screen.getByTestId('cell-0-1');
-    fireEvent.click(firstCell);
-    fireEvent.click(secondCell);
-    expect(firstCell.textContent).toBe('X');
-    expect(secondCell.textContent).toBe('O');
+
+    fireEvent.click(screen.getByTestId('cell-0-0'));
+
+    // Use waitFor to handle asynchronous state updates and setTimeout
+    await waitFor(() => {
+      expect(screen.getByTestId('cell-0-0').textContent).toBe('');
+    });
   });
 
 });
