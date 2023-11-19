@@ -15,6 +15,10 @@ describe('GameBoard component', () => {
 
     // Reset the mock to return true
     jest.spyOn(gameHeuristics, 'checkForWin').mockReturnValue(true);
+
+    let board;
+    // Initialize board before each test
+    board = Array(20).fill(null).map(() => Array(20).fill(null));
   });
 
   afterEach(() => {
@@ -46,5 +50,4 @@ describe('GameBoard component', () => {
       expect(screen.getByTestId('cell-0-0').textContent).toBe('');
     });
   });
-
 });

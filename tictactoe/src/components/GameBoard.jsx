@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import './GameBoard.css';
 import { checkForWin } from '../logic/GameHeuristics';
 import { selectCell } from '../logic/AI';
+import { getAvailableCells } from '../helpers/HelperFunctions';
 
 const GameBoard = () => {
   const initialBoardState = Array(20).fill(null).map(() => Array(20).fill(null));
@@ -22,14 +23,7 @@ const GameBoard = () => {
   };
 
   const makeAIMove = (boardStateAfterHuman) => {
-    const availableCells = [];
-    boardStateAfterHuman.forEach((row, rowIndex) => {
-      row.forEach((cell, colIndex) => {
-        if (cell === null) {
-          availableCells.push({ rowIndex, colIndex });
-        }
-      });
-    });
+    const availableCells = getAvailableCells(boardStateAfterHuman);
 
     if (availableCells.length === 0) {
       // No available cells, so no move can be made
