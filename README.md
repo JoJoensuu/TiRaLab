@@ -10,4 +10,6 @@
 
 ## Weekly Reports
 
-[Week 1](https://github.com/JoJoensuu/TiRaLab/blob/main/docs/ViikkoRaportit/vko1.md)
+- [Week 1](https://github.com/JoJoensuu/TiRaLab/blob/main/docs/ViikkoRaportit/vko1.md)
+- [Week 2](https://github.com/JoJoensuu/TiRaLab/blob/main/docs/ViikkoRaportit/vko2.md)
+- [Week 3](https://github.com/JoJoensuu/TiRaLab/blob/main/docs/ViikkoRaportit/vko3.md)
