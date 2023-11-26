@@ -1,6 +1,6 @@
-export const getAvailableCells = (boardStateAfterHuman) => {
+export const getAvailableCells = (board) => {
   const availableCells = [];
-  boardStateAfterHuman.forEach((row, rowIndex) => {
+  board.forEach((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
       if (cell === null) {
         availableCells.push({ rowIndex, colIndex });

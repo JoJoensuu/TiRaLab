@@ -1,22 +1,14 @@
-import { selectCell } from './AI';
+import { selectCell, selectBestMove } from './AI';
 
-describe('selectCell function', () => {
-  test('returns a cell object when availableCells is not empty', () => {
-    const availableCells = [{ rowIndex: 0, colIndex: 0 }, { rowIndex: 0, colIndex: 1 }];
-    const cell = selectCell(availableCells);
-    expect(cell).toBeDefined();
-    expect(cell).toHaveProperty('rowIndex');
-    expect(cell).toHaveProperty('colIndex');
+describe('selectBestMove function', () => {
+  let board;
+  beforeEach(() => {
+    // Initialize the board before each test
+    board = Array(20).fill(null).map(() => Array(20).fill(null));
   });
 
-  test('returns a cell from the availableCells array', () => {
-    const availableCells = [{ rowIndex: 0, colIndex: 0 }, { rowIndex: 0, colIndex: 1 }];
-    const cell = selectCell(availableCells);
-    expect(availableCells).toContainEqual(cell);
-  });
-
-  test('returns undefined when availableCells is empty', () => {
-    const cell = selectCell([]);
-    expect(cell).toBeUndefined();
+  test('returns the first available cell when board is empty', () => {
+    const cell = selectBestMove(board);
+    expect(cell).toEqual({ 'rowIndex': 0, 'colIndex': 0 });
   });
 });

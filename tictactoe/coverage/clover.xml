@@ -1,102 +1,174 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1700402493363" clover="3.2.0">
-  <project timestamp="1700402493363" name="All files">
-    <metrics statements="76" coveredstatements="70" conditionals="46" coveredconditionals="39" methods="22" coveredmethods="21" elements="144" coveredelements="130" complexity="0" loc="76" ncloc="76" packages="3" files="4" classes="4"/>
-    <package name="components">
-      <metrics statements="42" coveredstatements="36" conditionals="22" coveredconditionals="18" methods="15" coveredmethods="14"/>
-      <file name="GameBoard.jsx" path="/home/joensjon/TiRaLab/tictactoe/src/components/GameBoard.jsx">
-        <metrics statements="42" coveredstatements="36" conditionals="22" coveredconditionals="18" methods="15" coveredmethods="14"/>
-        <line num="7" count="1" type="stmt"/>
-        <line num="8" count="200" type="stmt"/>
-        <line num="9" count="10" type="stmt"/>
-        <line num="10" count="10" type="stmt"/>
-        <line num="12" count="10" type="stmt"/>
-        <line num="14" count="10" type="cond" truecount="2" falsecount="0"/>
-        <line num="15" count="1" type="stmt"/>
-        <line num="20" count="10" type="stmt"/>
-        <line num="21" count="2" type="stmt"/>
-        <line num="22" count="2" type="stmt"/>
-        <line num="25" count="10" type="stmt"/>
-        <line num="26" count="1" type="stmt"/>
-        <line num="28" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="30" count="0" type="stmt"/>
-        <line num="33" count="1" type="stmt"/>
-        <line num="35" count="1" type="stmt"/>
-        <line num="36" count="20" type="stmt"/>
-        <line num="37" count="400" type="cond" truecount="4" falsecount="0"/>
-        <line num="39" count="1" type="stmt"/>
-        <line num="41" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="42" count="0" type="stmt"/>
-        <line num="43" count="0" type="stmt"/>
-        <line num="44" count="0" type="stmt"/>
-        <line num="47" count="1" type="stmt"/>
-        <line num="51" count="10" type="stmt"/>
-        <line num="52" count="3" type="cond" truecount="3" falsecount="1"/>
-        <line num="53" count="0" type="stmt"/>
-        <line num="55" count="3" type="cond" truecount="1" falsecount="1"/>
-        <line num="56" count="0" type="stmt"/>
-        <line num="59" count="3" type="stmt"/>
-        <line num="60" count="60" type="stmt"/>
-        <line num="61" count="1200" type="cond" truecount="4" falsecount="0"/>
-        <line num="62" count="3" type="stmt"/>
-        <line num="65" count="3" type="stmt"/>
-        <line num="66" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="67" count="2" type="stmt"/>
-        <line num="68" count="2" type="stmt"/>
-        <line num="71" count="1" type="stmt"/>
-        <line num="76" count="10" type="stmt"/>
-        <line num="79" count="200" type="stmt"/>
-        <line num="81" count="4000" type="stmt"/>
-        <line num="85" count="3" type="stmt"/>
+<coverage generated="1700996431980" clover="3.2.0">
+  <project timestamp="1700996431980" name="All files">
+    <metrics statements="133" coveredstatements="125" conditionals="69" coveredconditionals="58" methods="28" coveredmethods="25" elements="230" coveredelements="208" complexity="0" loc="133" ncloc="133" packages="4" files="8" classes="8"/>
+    <package name="src">
+      <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="Config.js" path="/home/joensjon/TiRaLab/tictactoe/src/Config.js">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="3" type="stmt"/>
+        <line num="2" count="3" type="stmt"/>
+        <line num="4" count="3" type="stmt"/>
       </file>
     </package>
-    <package name="helpers">
+    <package name="src.components">
+      <metrics statements="46" coveredstatements="42" conditionals="21" coveredconditionals="18" methods="14" coveredmethods="12"/>
+      <file name="GameBoard.jsx" path="/home/joensjon/TiRaLab/tictactoe/src/components/GameBoard.jsx">
+        <metrics statements="32" coveredstatements="28" conditionals="17" coveredconditionals="14" methods="12" coveredmethods="10"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="80" type="stmt"/>
+        <line num="11" count="4" type="stmt"/>
+        <line num="12" count="4" type="stmt"/>
+        <line num="14" count="4" type="stmt"/>
+        <line num="15" count="4" type="cond" truecount="4" falsecount="0"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="19" count="400" type="cond" truecount="4" falsecount="0"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="32" count="4" type="stmt"/>
+        <line num="33" count="1" type="cond" truecount="4" falsecount="1"/>
+        <line num="34" count="0" type="stmt"/>
+        <line num="37" count="20" type="stmt"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="39" count="1" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="44" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="48" count="4" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="54" count="4" type="stmt"/>
+        <line num="59" count="80" type="stmt"/>
+        <line num="61" count="1600" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+      </file>
+      <file name="GameOver.jsx" path="/home/joensjon/TiRaLab/tictactoe/src/components/GameOver.jsx">
+        <metrics statements="11" coveredstatements="11" conditionals="4" coveredconditionals="4" methods="1" coveredmethods="1"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="4" type="stmt"/>
+        <line num="5" count="4" type="cond" truecount="4" falsecount="0"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="19" count="4" type="stmt"/>
+      </file>
+      <file name="GameState.js" path="/home/joensjon/TiRaLab/tictactoe/src/components/GameState.js">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="4" type="stmt"/>
+      </file>
+      <file name="Reset.jsx" path="/home/joensjon/TiRaLab/tictactoe/src/components/Reset.jsx">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="4" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.helpers">
       <metrics statements="7" coveredstatements="7" conditionals="2" coveredconditionals="2" methods="3" coveredmethods="3"/>
       <file name="HelperFunctions.jsx" path="/home/joensjon/TiRaLab/tictactoe/src/helpers/HelperFunctions.jsx">
         <metrics statements="7" coveredstatements="7" conditionals="2" coveredconditionals="2" methods="3" coveredmethods="3"/>
-        <line num="1" count="2" type="stmt"/>
-        <line num="2" count="3" type="stmt"/>
-        <line num="3" count="3" type="stmt"/>
-        <line num="4" count="60" type="stmt"/>
-        <line num="5" count="1200" type="cond" truecount="2" falsecount="0"/>
-        <line num="6" count="799" type="stmt"/>
-        <line num="11" count="3" type="stmt"/>
+        <line num="1" count="3" type="stmt"/>
+        <line num="2" count="4" type="stmt"/>
+        <line num="3" count="4" type="stmt"/>
+        <line num="4" count="80" type="stmt"/>
+        <line num="5" count="1600" type="cond" truecount="2" falsecount="0"/>
+        <line num="6" count="1199" type="stmt"/>
+        <line num="11" count="4" type="stmt"/>
       </file>
     </package>
-    <package name="logic">
-      <metrics statements="27" coveredstatements="27" conditionals="22" coveredconditionals="19" methods="4" coveredmethods="4"/>
+    <package name="src.logic">
+      <metrics statements="77" coveredstatements="73" conditionals="46" coveredconditionals="38" methods="11" coveredmethods="10"/>
       <file name="AI.jsx" path="/home/joensjon/TiRaLab/tictactoe/src/logic/AI.jsx">
-        <metrics statements="4" coveredstatements="4" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
-        <line num="1" count="2" type="stmt"/>
-        <line num="2" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="3" count="2" type="stmt"/>
-        <line num="4" count="2" type="stmt"/>
+        <metrics statements="43" coveredstatements="41" conditionals="14" coveredconditionals="12" methods="3" coveredmethods="2"/>
+        <line num="6" count="2" type="stmt"/>
+        <line num="7" count="2" type="stmt"/>
+        <line num="8" count="2" type="stmt"/>
+        <line num="10" count="2" type="stmt"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="12" count="2" type="stmt"/>
+        <line num="13" count="2" type="stmt"/>
+        <line num="15" count="2" type="stmt"/>
+        <line num="16" count="799" type="stmt"/>
+        <line num="17" count="799" type="stmt"/>
+        <line num="18" count="799" type="stmt"/>
+        <line num="19" count="799" type="cond" truecount="2" falsecount="0"/>
+        <line num="20" count="2" type="stmt"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="25" count="2" type="stmt"/>
+        <line num="28" count="2" type="stmt"/>
+        <line num="29" count="126884395" type="cond" truecount="2" falsecount="0"/>
+        <line num="30" count="126565194" type="stmt"/>
+        <line num="33" count="319201" type="stmt"/>
+        <line num="34" count="319201" type="cond" truecount="1" falsecount="1"/>
+        <line num="35" count="0" type="stmt"/>
+        <line num="38" count="319201" type="cond" truecount="2" falsecount="0"/>
+        <line num="39" count="799" type="stmt"/>
+        <line num="40" count="799" type="stmt"/>
+        <line num="41" count="15980" type="stmt"/>
+        <line num="42" count="319600" type="cond" truecount="2" falsecount="0"/>
+        <line num="43" count="318402" type="stmt"/>
+        <line num="44" count="318402" type="stmt"/>
+        <line num="45" count="318402" type="stmt"/>
+        <line num="46" count="318402" type="stmt"/>
+        <line num="50" count="799" type="stmt"/>
+        <line num="52" count="318402" type="stmt"/>
+        <line num="53" count="318402" type="cond" truecount="1" falsecount="1"/>
+        <line num="54" count="318402" type="stmt"/>
+        <line num="55" count="6368040" type="stmt"/>
+        <line num="56" count="127360800" type="cond" truecount="2" falsecount="0"/>
+        <line num="57" count="126565194" type="stmt"/>
+        <line num="58" count="126565194" type="stmt"/>
+        <line num="59" count="126565194" type="stmt"/>
+        <line num="60" count="126565194" type="stmt"/>
+        <line num="64" count="318402" type="stmt"/>
+        <line num="68" count="2" type="stmt"/>
+        <line num="69" count="0" type="stmt"/>
       </file>
       <file name="GameHeuristics.jsx" path="/home/joensjon/TiRaLab/tictactoe/src/logic/GameHeuristics.jsx">
-        <metrics statements="23" coveredstatements="23" conditionals="20" coveredconditionals="17" methods="3" coveredmethods="3"/>
-        <line num="1" count="2" type="stmt"/>
-        <line num="2" count="6" type="stmt"/>
-        <line num="5" count="6" type="cond" truecount="2" falsecount="0"/>
-        <line num="6" count="2" type="stmt"/>
-        <line num="7" count="2" type="cond" truecount="1" falsecount="1"/>
-        <line num="11" count="6" type="cond" truecount="2" falsecount="0"/>
-        <line num="12" count="2" type="stmt"/>
-        <line num="13" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="15" count="5" type="stmt"/>
-        <line num="18" count="2" type="stmt"/>
-        <line num="19" count="5" type="stmt"/>
-        <line num="22" count="5" type="cond" truecount="2" falsecount="0"/>
-        <line num="23" count="3" type="stmt"/>
-        <line num="24" count="3" type="cond" truecount="1" falsecount="1"/>
-        <line num="27" count="5" type="cond" truecount="2" falsecount="0"/>
-        <line num="28" count="1" type="stmt"/>
-        <line num="29" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="31" count="4" type="stmt"/>
-        <line num="34" count="2" type="stmt"/>
-        <line num="35" count="6" type="stmt"/>
-        <line num="36" count="6" type="cond" truecount="2" falsecount="0"/>
-        <line num="37" count="5" type="cond" truecount="2" falsecount="0"/>
-        <line num="39" count="4" type="stmt"/>
+        <metrics statements="34" coveredstatements="32" conditionals="32" coveredconditionals="26" methods="8" coveredmethods="8"/>
+        <line num="5" count="3" type="stmt"/>
+        <line num="6" count="319208" type="stmt"/>
+        <line num="9" count="319208" type="cond" truecount="2" falsecount="0"/>
+        <line num="10" count="762" type="stmt"/>
+        <line num="11" count="762" type="cond" truecount="1" falsecount="1"/>
+        <line num="15" count="319208" type="cond" truecount="2" falsecount="0"/>
+        <line num="16" count="761" type="stmt"/>
+        <line num="17" count="761" type="cond" truecount="2" falsecount="0"/>
+        <line num="19" count="319207" type="stmt"/>
+        <line num="22" count="3" type="stmt"/>
+        <line num="23" count="319207" type="stmt"/>
+        <line num="26" count="319207" type="cond" truecount="2" falsecount="0"/>
+        <line num="27" count="762" type="stmt"/>
+        <line num="28" count="762" type="cond" truecount="1" falsecount="1"/>
+        <line num="31" count="319207" type="cond" truecount="2" falsecount="0"/>
+        <line num="32" count="760" type="stmt"/>
+        <line num="33" count="760" type="cond" truecount="2" falsecount="0"/>
+        <line num="35" count="319206" type="stmt"/>
+        <line num="38" count="3" type="stmt"/>
+        <line num="39" count="7" type="stmt"/>
+        <line num="40" count="7" type="cond" truecount="4" falsecount="0"/>
+        <line num="41" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="44" count="407" type="stmt"/>
+        <line num="45" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="48" count="4" type="stmt"/>
+        <line num="51" count="3" type="stmt"/>
+        <line num="52" count="319201" type="stmt"/>
+        <line num="54" count="319201" type="cond" truecount="3" falsecount="1"/>
+        <line num="56" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="59" count="480002" type="stmt"/>
+        <line num="60" count="319201" type="cond" truecount="1" falsecount="1"/>
+        <line num="61" count="0" type="stmt"/>
+        <line num="64" count="319201" type="stmt"/>
       </file>
     </package>
   </project>

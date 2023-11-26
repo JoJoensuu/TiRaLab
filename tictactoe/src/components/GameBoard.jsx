@@ -1,94 +1,76 @@
 import { useState, useEffect } from 'react';
 import './GameBoard.css';
 import { checkForWin } from '../logic/GameHeuristics';
-import { selectCell } from '../logic/AI';
-import { getAvailableCells } from '../helpers/HelperFunctions';
+import { GameState } from './GameState';
+import { PLAYER, AI } from '../Config';
+import { Reset } from './Reset';
+import { selectBestMove } from '../logic/AI';
 
-const GameBoard = () => {
-  const initialBoardState = Array(20).fill(null).map(() => Array(20).fill(null));
-  const [board, setBoard] = useState(initialBoardState);
-  const [currentPlayer, setCurrentPlayer] = useState('X');
+const GameBoard = ( { gameState, setGameState }) => {
+  const [board, setBoard] = useState(Array(20).fill(null).map(() => Array(20).fill(null)));
+  const [currentPlayer, setCurrentPlayer] = useState(PLAYER);
+  const [lastMove, setLastMove] = useState({ lastRow: null, lastCol: null });
 
   useEffect(() => {
-    // Check if it's AI's turn
-    if (currentPlayer === 'O') {
-      makeAIMove(board);
+    if (currentPlayer === AI && gameState === GameState.inProgress) {
+      const aiMove = selectBestMove(board, lastMove.lastRow, lastMove.lastCol, PLAYER);
+      if (aiMove) {
+        const newBoard = board.map((row, rIdx) =>
+          row.map((cell, cIdx) => (rIdx === aiMove.rowIndex && cIdx === aiMove.colIndex ? AI : cell))
+        );
+
+        setBoard(newBoard);
+        const newGameState = checkForWin(newBoard, aiMove.rowIndex, aiMove.colIndex);
+        setGameState(newGameState);
+
+        setCurrentPlayer(PLAYER);
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPlayer, board]);
-
-  const resetBoard = () => {
-    setBoard(initialBoardState);
-    setCurrentPlayer('X');
-  };
-
-  const makeAIMove = (boardStateAfterHuman) => {
-    const availableCells = getAvailableCells(boardStateAfterHuman);
-
-    if (availableCells.length === 0) {
-      // No available cells, so no move can be made
-      return;
-    }
-
-    const randomCell = selectCell(availableCells);
-
-    const updatedBoard = board.map((row, rIdx) =>
-      row.map((cell, cIdx) =>
-        rIdx === randomCell.rowIndex && cIdx === randomCell.colIndex ? 'O' : cell));
-
-    setBoard(updatedBoard);
-    // Check for a win after AI move
-    if (checkForWin(updatedBoard, randomCell.rowIndex, randomCell.colIndex)) {
-      setTimeout(() => {
-        alert('AI wins!');
-        resetBoard();
-      }, 100);
-    } else {
-      setCurrentPlayer('X'); // Switch back to the human player
-    }
-  };
+  }, [currentPlayer, gameState, board]);
 
   const handleCellClick = (rowIndex, colIndex) => {
-    if (board[rowIndex][colIndex] !== null || currentPlayer !== 'X') {
-      return; // Ignore click if cell is already taken or it's not the human player's turn
-    }
-    if (board[rowIndex][colIndex] !== null) {
+    if (board[rowIndex][colIndex] !== null || currentPlayer !== PLAYER || gameState !== GameState.inProgress) {
       return;
     }
 
-    const updatedBoard = board.map((row, rIdx) =>
-      row.map((cell, cIdx) =>
-        rIdx === rowIndex && cIdx === colIndex ? currentPlayer : cell));
-    setBoard(updatedBoard);
+    const newBoard = board.map(row => [...row]);
+    newBoard[rowIndex][colIndex] = currentPlayer;
+    setBoard(newBoard);
 
-    // Check for a win using updatedBoard
-    setTimeout(() => {
-      if (checkForWin(updatedBoard, rowIndex, colIndex)) {
-        alert(`Player ${currentPlayer} wins!`);
-        resetBoard();
-        // Handle win
-      } else {
-        setCurrentPlayer('O');
-      }
-    }, 100);
+    const newGameState = checkForWin(newBoard, rowIndex, colIndex, currentPlayer);
+    setGameState(newGameState);
+
+    currentPlayer === PLAYER ? setCurrentPlayer(AI) : setCurrentPlayer(PLAYER);
+    setLastMove({ lastRow: rowIndex, lastCol: colIndex });
+  };
+
+  const handleReset = () => {
+    setGameState(GameState.inProgress);
+    setBoard(Array(20).fill(null).map(() => Array(20).fill(null)));
+    setCurrentPlayer(PLAYER);
   };
 
   return (
-    <div className="game-board" data-testid="gameboard">
-      {board.map((row, rowIndex) => (
-        <div key={rowIndex} className="board-row">
-          {row.map((cell, colIndex) => (
-            <button
-              key={`${rowIndex}-${colIndex}`}
-              className="cell"
-              data-testid={`cell-${rowIndex}-${colIndex}`}
-              onClick={() => handleCellClick(rowIndex, colIndex)}>
-              {cell}
-            </button>
-          ))}
-        </div>
-      ))}
+    <div>
+      <Reset gameState={gameState} onReset={handleReset} />
+      <div className="game-board" data-testid="gameboard">
+        {board.map((row, rowIndex) => (
+          <div key={rowIndex} className="board-row">
+            {row.map((cell, colIndex) => (
+              <button
+                key={`${rowIndex}-${colIndex}`}
+                className="cell"
+                data-testid={`cell-${rowIndex}-${colIndex}`}
+                onClick={() => handleCellClick(rowIndex, colIndex)}>
+                {cell}
+              </button>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
+
   );
 };
 
