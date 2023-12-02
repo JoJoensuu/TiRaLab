@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>22/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -74,28 +74,79 @@
 <a name='L9'></a><a href='#L9'>9</a>
 <a name='L10'></a><a href='#L10'>10</a>
 <a name='L11'></a><a href='#L11'>11</a>
-<a name='L12'></a><a href='#L12'>12</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">80x</span>
-<span class="cline-any cline-yes">1600x</span>
-<span class="cline-any cline-yes">1199x</span>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">104x</span>
+<span class="cline-any cline-yes">104x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">104x</span>
+<span class="cline-any cline-yes">2080x</span>
+<span class="cline-any cline-yes">41600x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40624x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40624x</span>
+<span class="cline-any cline-yes">119820x</span>
+<span class="cline-any cline-yes">357961x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">318376x</span>
+<span class="cline-any cline-yes">318376x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">318376x</span>
+<span class="cline-any cline-yes">1186x</span>
+<span class="cline-any cline-yes">1186x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">104x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export const getAvailableCells = (board) =&gt; {
-  const availableCells = [];
-  board.forEach((row, rowIndex) =&gt; {
-    row.forEach((cell, colIndex) =&gt; {
-      if (cell === null) {
-        availableCells.push({ rowIndex, colIndex });
-      }
-    });
-  });
+  const moves = [];
+  const boardSize = board.length;
 &nbsp;
-  return availableCells;
+  for (let i = 0; i &lt; boardSize; i++) {
+    for (let j = 0; j &lt; boardSize; j++) {
+      if (board[i][j] !== null) continue; // Skip already marked cells
+&nbsp;
+      let adjacentFound = false;
+&nbsp;
+      // Check adjacent cells
+      for (let di = -1; di &lt;= 1 &amp;&amp; !adjacentFound; di++) {
+        for (let dj = -1; dj &lt;= 1 &amp;&amp; !adjacentFound; dj++) {
+          if (di === 0 &amp;&amp; dj === 0) continue; // Skip the cell itself
+&nbsp;
+          const adjI = i + di;
+          const adjJ = j + dj;
+&nbsp;
+          if (adjI &gt;= 0 &amp;&amp; adjI &lt; boardSize &amp;&amp; adjJ &gt;= 0 &amp;&amp; adjJ &lt; boardSize &amp;&amp; board[adjI][adjJ] !== null) {
+            moves.push({ rowIndex: i, colIndex: j });
+            adjacentFound = true; // Mark that an adjacent cell is found
+          }
+        }
+      }
+    }
+  }
+&nbsp;
+  return moves;
 };</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -103,7 +154,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-11-26T11:00:31.963Z
+                at 2023-12-02T21:39:54.884Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
