@@ -1,6 +1,6 @@
 import { PLAYER, AI } from '../Config';
 import { GameState } from '../components/GameState';
-import { scores } from '../Config';
+import { scores, params } from '../Config';
 
 const checkHorizontal = (board, rowIndex, colIndex, currentPlayer) => {
   let count = 1; // Start the count at 1 to include the current cell
@@ -68,35 +68,51 @@ const checkDiagonal = (board, rowIndex, colIndex, currentPlayer) => {
   return false;
 };
 
+// Function to check for a win or draw in the game
 export const checkForWin = (board, rowIndex, colIndex) => {
+  // Identify the current player based on the last move
   const currentPlayer = board[rowIndex][colIndex];
+
+  // Check if the current player has won horizontally, vertically, or diagonally
   if (checkHorizontal(board, rowIndex, colIndex, currentPlayer) ||
     checkVertical(board, rowIndex, colIndex, currentPlayer) ||
     checkDiagonal(board, rowIndex, colIndex, currentPlayer)) {
+    // If a win is detected, return the corresponding game state (player or AI wins)
     return currentPlayer === PLAYER ? GameState.playerWins : GameState.aiWins;
   }
 
+  // Check if the game is a draw (no empty cells left on the board)
   const isDraw = board.every(row => row.every(cell => cell !== null));
   if (isDraw) {
+    // If it's a draw, return the draw game state
     return GameState.draw;
   }
+
+  // If neither a win nor a draw, the game is still in progress
   return GameState.inProgress;
 };
 
+// Similar function to check for a win or draw in the context of the Minimax algorithm
 export const checkForWinMinimax = (board, rowIndex, colIndex, maximizingPlayer) => {
+  // Identify the player who made the last move
   const currentPlayer = board[rowIndex][colIndex];
 
+  // Check if the current player has won horizontally, vertically, or diagonally
   if (checkHorizontal(board, rowIndex, colIndex, currentPlayer) ||
       checkVertical(board, rowIndex, colIndex, currentPlayer) ||
       checkDiagonal(board, rowIndex, colIndex, currentPlayer)) {
+    // Assign Minimax scores based on whether the current player is the maximizing player
     return currentPlayer === maximizingPlayer ? scores.WIN_SCORE : scores.LOSE_SCORE;
   }
 
+  // Check for a draw in the context of the Minimax algorithm
   const isDraw = board.every(row => row.every(cell => cell !== null));
   if (isDraw) {
+    // Return the score for a draw in Minimax
     return scores.DRAW_SCORE;
   }
 
+  // If neither win nor draw, return null indicating no conclusion yet
   return null;
 };
 
@@ -137,7 +153,7 @@ export const evaluateVertical = (board, isAI, isAITurn) => {
 };
 
 export const evaluateDiagonal = (board, isAI, isAITurn) => {
-  let evaluations = [0, 2, 0]; // [0]: consecutive count, [1]: block count, [2]: score
+  let evaluations = [0, 2, 0];
   const boardSize = board.length;
 
   // From bottom-left to top-right diagonally
@@ -159,63 +175,92 @@ export const evaluateDiagonal = (board, isAI, isAITurn) => {
     }
     evaluateDirectionsAfterOnePass(evaluations, isAI, isAITurn);
   }
-
   return evaluations[2];
 };
 
+// Function to calculate the score based on the number of consecutive marks, how many ends are blocked, and whose turn it is
 export const getConsecutiveScore = (count, blocked, currentTurn) => {
-  let WIN_SCORE = Infinity;
+  // Define a high score for winning condition
+  let WIN_SCORE = 10000;
 
+  // If both ends of the sequence are blocked and the count is less than 5, the sequence is not useful
   if (blocked === 2 && count < 5) return 0;
 
   switch (count) {
-  case 5:
-    return WIN_SCORE;
-  case 4:
-    if (currentTurn) return WIN_SCORE / 2;
+  case 5: // A count of 5 means a win
+    return params.MAX_SCORE;
+  case 4: // For 4 consecutive marks
+    if (currentTurn) return WIN_SCORE / 2; // If it's the current player's turn, a high score is assigned
     else {
-      if (blocked === 0) return WIN_SCORE / 4;
-      else return 200;
+      // If it's not the current player's turn
+      if (blocked === 0) return WIN_SCORE / 4; // Higher score if neither end is blocked
+      else return 200; // Lower score if at least one end is blocked
     }
-  case 3:
+  case 3: // For 3 consecutive marks
     if (blocked === 0) {
-      if (currentTurn) return 50000;
-      else return 200;
+      // Higher score if neither end is blocked
+      if (currentTurn) return 50000; // Very high score if it's the current player's turn
+      else return 200; // Lower score if it's not the current player's turn
     } else {
-      if (currentTurn) return 10;
-      else return 5;
+      // For blocked sequences
+      if (currentTurn) return 10; // Lower score if it's the current player's turn
+      else return 5; // Even lower if it's not
     }
-  case 2:
+  case 2: // For 2 consecutive marks
     if (blocked === 0) {
-      if (currentTurn) return 7;
-      else return 5;
+      // Slightly higher score if neither end is blocked
+      if (currentTurn) return 7; // Slightly higher if it's the current player's turn
+      else return 5; // Slightly lower if not
     } else {
-      return 3;
+      return 3; // Lowest score for 2 marks with at least one end blocked
     }
-  case 1:
+  case 1: // For a single mark, a nominal score is assigned
     return 1;
   default:
+    // For more than 5 consecutive marks, assign double the win score
     return WIN_SCORE * 2;
   }
 };
 
 export const evaluateDirections = (board, rowIndex, colIndex, isAI, isAITurn, scoreData) => {
+  // Retrieve the content of the current cell being evaluated
   const cell = board[rowIndex][colIndex];
 
-  if (cell === AI) {
+  // Determine the marks for the current player and the opponent based on whether the AI is evaluating
+  const currentPlayerMark = isAI ? AI : PLAYER;
+  const opponentMark = isAI ? PLAYER : AI;
+
+  // If the current cell contains the current player's mark
+  if (cell === currentPlayerMark) {
+    // Increment the consecutive count
     scoreData[0]++;
-  } else if (cell === null) {
+  }
+  // If the current cell is empty
+  else if (cell === null) {
+    // If there was a sequence of consecutive marks before this empty cell
     if (scoreData[0] > 0) {
+      // Decrement the block count since an empty cell is not a block
       scoreData[1]--;
+      // Calculate and add the score for the current sequence up to the empty cell
       scoreData[2] += getConsecutiveScore(scoreData[0], scoreData[1], isAI === isAITurn);
+      // Reset the consecutive count since the sequence has been broken
       scoreData[0] = 0;
     }
+    // Since this cell is empty, it's a potential start of a new sequence, so set block count to 1
     scoreData[1] = 1;
-  } else if (cell === PLAYER && scoreData[0] > 0) {
+  }
+  // If the cell contains the opponent's mark and there was a sequence of the current player's marks before this
+  else if (cell === opponentMark && scoreData[0] > 0) {
+    // Calculate and add the score for the sequence that ends with the opponent's mark
     scoreData[2] += getConsecutiveScore(scoreData[0], scoreData[1], isAI === isAITurn);
+    // Reset the consecutive count since the sequence has ended
     scoreData[0] = 0;
+    // Set block count to 2 because the opponent's mark is a block
     scoreData[1] = 2;
-  } else {
+  }
+  // If the cell contains the opponent's mark but there was no preceding sequence of the current player's marks
+  else {
+    // Set block count to 2 because the opponent's mark is a block and there's no sequence to score
     scoreData[1] = 2;
   }
 };

@@ -6,3 +6,9 @@ export const scores = {
   LOSE_SCORE: -10,
   DRAW_SCORE: 0,
 };
+
+export const params = {
+  MIN_SCORE: -100000,
+  MAX_SCORE: 10000000,
+  MAX_DEPTH: 3,
+};

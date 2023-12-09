@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { getAvailableCells } from './HelperFunctions';
-import { PLAYER } from '../Config';
+import { PLAYER, AI } from '../Config';
 
 describe('getAvailableCells', () => {
   let board;
@@ -25,5 +25,18 @@ describe('getAvailableCells', () => {
 
     const availableCells = getAvailableCells(board);
     expect(availableCells.length).toEqual(0);
+  });
+
+  test('returns a correct amount of cells in midgame state', () => {
+    board[0][7] = board[0][8] = board[0][10] = board[0][1] = PLAYER;
+    board[1][4] = board[1][9] = board[2][5] = board[2][8] = PLAYER;
+    board[2][9] = board[3][8] = board[4][6] = board[4][7] = PLAYER;
+
+    board[0][3] = board[0][6] = board[0][9] = AI;
+    board[1][5] = board[1][6] = board[1][7] = board[1][8] = AI;
+    board[2][6] = board[2][7] = board[3][6] = board[3][7] = AI;
+
+    const availableCells = getAvailableCells(board);
+    expect(availableCells.length).toEqual(25);
   });
 });

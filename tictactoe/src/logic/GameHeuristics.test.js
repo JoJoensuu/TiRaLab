@@ -5,7 +5,7 @@ import { checkForWin,
   evaluateVertical,
   getScore
 } from './GameHeuristics';
-import { PLAYER, AI } from '../Config';
+import { PLAYER, AI, params } from '../Config';
 import { GameState } from '../components/GameState';
 import '@testing-library/jest-dom';
 
@@ -67,19 +67,19 @@ describe('Tic-Tac-Toe Win Logic', () => {
     });
 
     it('returns the maximum score for 5 in a row with no blocks', () => {
-      expect(getConsecutiveScore(5, 0, true)).toBe(Infinity);
+      expect(getConsecutiveScore(5, 0, true)).toBe(params.MAX_SCORE);
     });
 
     it('returns a high score for 4 in a row with no blocks on current turn', () => {
-      expect(getConsecutiveScore(4, 0, true)).toBe(Infinity / 2);
+      expect(getConsecutiveScore(4, 0, true)).toBe(5000);
     });
 
     it('returns a high score for 4 in a row with one side blocked on current turn', () => {
-      expect(getConsecutiveScore(4, 1, true)).toBe(Infinity / 2);
+      expect(getConsecutiveScore(4, 1, true)).toBe(5000);
     });
 
     it('returns a lower score for 4 in a row on opposing players turn', () => {
-      expect(getConsecutiveScore(4, 0, false)).toBe(Infinity / 4);
+      expect(getConsecutiveScore(4, 0, false)).toBe(2500);
     });
 
     it('returns a lower score for 4 in a row with one side blocked on opposing players turn', () => {
@@ -179,7 +179,17 @@ describe('Tic-Tac-Toe Win Logic', () => {
       }
 
       const score = evaluateHorizontal(board, true, true);
-      expect(score).toBe(Infinity); // Expect a positive score for AI's advantage
+      expect(score).toBe(5000); // Expect a near max score for AI advantage
+    });
+
+    it('correctly evaluates a bad position for player horizontally', () => {
+      // Set up a board where AI is about to win horizontally
+      for (let i = 0; i < 4; i++) {
+        board[0][i] = AI;
+      }
+
+      const score = evaluateHorizontal(board, false, true);
+      expect(score).toEqual(0); // Expect a positive score for AI's advantage
     });
 
     it('correctly evaluates a blocked AI opportunity horizontally', () => {
@@ -209,7 +219,7 @@ describe('Tic-Tac-Toe Win Logic', () => {
       }
 
       const score = evaluateVertical(board, true, true);
-      expect(score).toBe(Infinity); // Expect a positive score for AI's advantage
+      expect(score).toBe(5000); // Expect a near maximum score for AI's advantage
     });
 
     it('correctly evaluates a blocked AI opportunity vertically', () => {
@@ -226,8 +236,6 @@ describe('Tic-Tac-Toe Win Logic', () => {
 
   describe('getScore', () => {
     let board;
-    const AI = 'O';
-    const PLAYER = 'X';
 
     beforeEach(() => {
       // Initialize the board before each test
@@ -238,7 +246,7 @@ describe('Tic-Tac-Toe Win Logic', () => {
       // Setup a board where AI has a clear advantage
       board[0][0] = board[0][1] = board[0][2] = board[0][3] = AI; // Horizontal line of 4 for AI
       const score = getScore(board, true, true);
-      expect(score).toBeGreaterThan(0); // Expect a positive score for AI's advantage
+      expect(score).toBeGreaterThan(5000); // Expect a positive score for AI's advantage
     });
 
     it('correctly evaluates a strong player advantage', () => {
@@ -254,6 +262,19 @@ describe('Tic-Tac-Toe Win Logic', () => {
       board[17][17] = PLAYER;
       const score = getScore(board, true, true);
       expect(score).toBe(4); // Neutral board should have a score close to 0
+    });
+
+    it('correctly evaluates a midgame board', () => {
+      board[0][7] = board[0][8] = board[0][10] = board[0][1] = PLAYER;
+      board[1][4] = board[1][9] = board[2][5] = board[2][8] = PLAYER;
+      board[2][9] = board[3][8] = board[4][6] = board[4][7] = PLAYER;
+
+      board[0][3] = board[0][6] = board[0][9] = AI;
+      board[1][5] = board[1][6] = board[1][7] = board[1][8] = AI;
+      board[2][6] = board[2][7] = board[3][6] = board[3][7] = AI;
+
+      const score = getScore(board, true, true);
+      expect(score).toBeGreaterThan(50000);
     });
   });
 });
