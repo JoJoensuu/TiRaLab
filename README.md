@@ -7,6 +7,7 @@
 ## Documentation
 
 [Specification document](https://github.com/JoJoensuu/TiRaLab/blob/main/docs/specif.md)
+[Implementation document](https://github.com/JoJoensuu/TiRaLab/blob/main/docs/implementation.md)
 
 ## Weekly Reports
 
