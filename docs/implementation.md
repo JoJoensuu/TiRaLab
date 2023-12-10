@@ -1,4 +1,4 @@
-# Specification documentation
+# Implementation documentation
 
 ## Main components
 
