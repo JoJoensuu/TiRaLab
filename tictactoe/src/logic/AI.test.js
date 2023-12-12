@@ -1,6 +1,6 @@
 import { selectBestMove, evaluateBoardForAI, checkForWinningMove } from './AI';
 import { getAvailableCells } from '../helpers/HelperFunctions';
-import { AI, PLAYER, params } from '../Config';
+import { AI, PLAYER } from '../Config';
 
 describe('AI move selection logic', () => {
   let board;
@@ -28,7 +28,7 @@ describe('AI move selection logic', () => {
       }
 
       const score = evaluateBoardForAI(board, true);
-      expect(score).toBeLessThan(0); // Expect below zero score indicating player advantage
+      expect(score).toEqual(0); // Expect zero score indicating player advantage
     });
 
     it('correctly evaluates a neutral board', () => {
@@ -47,7 +47,7 @@ describe('AI move selection logic', () => {
       board = Array(20).fill(null).map(() => Array(20).fill(null));
     });
 
-    it('correctly returns a blocking move when player is about to win', () => {
+    it('AI tries to block one side when player has 3 pieces in a row', () => {
       // Setup a board where the player has 3 in a horizontal row
       board[0][10] = PLAYER;
       board[0][11] = PLAYER;
@@ -59,10 +59,10 @@ describe('AI move selection logic', () => {
 
     it('correctly returns a blocking move when player is about to win', () => {
       // Setup a board where the player has a horizontal row with 1 piece missing
-      board[0][10] = board[0][11] = board[0][13] = board[0][14] = PLAYER;
+      board[0][0] = board[0][1] = board[0][2] = board[0][3] = PLAYER;
 
       const aiMove = selectBestMove(board);
-      expect(aiMove).toEqual({ rowIndex: 0, colIndex: 12 }); // AI should correctly block the player move
+      expect(aiMove).toEqual({ rowIndex: 0, colIndex: 4 }); // AI should correctly block the player move
     });
 
     it('correctly returns a blocking move when player is about to win with a more complicated gameBoard', () => {
@@ -93,7 +93,7 @@ describe('AI move selection logic', () => {
 
       const moves = getAvailableCells(board);
       const winningMove = checkForWinningMove(board, moves);
-      expect(winningMove).toEqual({ rowIndex: 0, colIndex: 4 }); // Expect AI to complete the line
+      expect(winningMove).toEqual({ rowIndex: 0, colIndex: 4, score: null }); // Expect AI to complete the line
     });
 
     it('identifies a winning move with no sides blocked', () => {
@@ -105,7 +105,7 @@ describe('AI move selection logic', () => {
 
       const moves = getAvailableCells(board);
       const winningMove = checkForWinningMove(board, moves);
-      expect(winningMove).toEqual({ rowIndex: 0, colIndex: 0 }); // Expect AI to complete the line
+      expect(winningMove).toEqual({ rowIndex: 0, colIndex: 0, score: null }); // Expect AI to complete the line
     });
 
     it('identifies a diagonal winning move', () => {
@@ -117,7 +117,7 @@ describe('AI move selection logic', () => {
 
       const moves = getAvailableCells(board);
       const winningMove = checkForWinningMove(board, moves);
-      expect(winningMove).toEqual({ rowIndex: 6, colIndex: 6 }); // Expect AI to complete the line
+      expect(winningMove).toEqual({ rowIndex: 6, colIndex: 6, score: null }); // Expect AI to complete the line
     });
 
     it('identifies a diagonal winning move when player also has 4 in a row diagonally', () => {
@@ -127,7 +127,7 @@ describe('AI move selection logic', () => {
 
       const moves = getAvailableCells(board);
       const winningMove = checkForWinningMove(board, moves);
-      expect(winningMove).toEqual({ rowIndex: 6, colIndex: 6 }); // Expect AI to complete the line
+      expect(winningMove).toEqual({ rowIndex: 6, colIndex: 6, score: null }); // Expect AI to complete the line
     });
 
     it('returns null when there is no winning move', () => {

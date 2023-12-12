@@ -92,30 +92,6 @@ export const checkForWin = (board, rowIndex, colIndex) => {
   return GameState.inProgress;
 };
 
-// Similar function to check for a win or draw in the context of the Minimax algorithm
-export const checkForWinMinimax = (board, rowIndex, colIndex, maximizingPlayer) => {
-  // Identify the player who made the last move
-  const currentPlayer = board[rowIndex][colIndex];
-
-  // Check if the current player has won horizontally, vertically, or diagonally
-  if (checkHorizontal(board, rowIndex, colIndex, currentPlayer) ||
-      checkVertical(board, rowIndex, colIndex, currentPlayer) ||
-      checkDiagonal(board, rowIndex, colIndex, currentPlayer)) {
-    // Assign Minimax scores based on whether the current player is the maximizing player
-    return currentPlayer === maximizingPlayer ? scores.WIN_SCORE : scores.LOSE_SCORE;
-  }
-
-  // Check for a draw in the context of the Minimax algorithm
-  const isDraw = board.every(row => row.every(cell => cell !== null));
-  if (isDraw) {
-    // Return the score for a draw in Minimax
-    return scores.DRAW_SCORE;
-  }
-
-  // If neither win nor draw, return null indicating no conclusion yet
-  return null;
-};
-
 export const getScore = (board, isAI, isAITurn) => {
   // Calculate score for horizontal and vertical directions
   const horizontalScore = evaluateHorizontal(board, isAI, isAITurn);
