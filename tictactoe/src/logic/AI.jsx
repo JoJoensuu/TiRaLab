@@ -1,15 +1,14 @@
 import { AI, PLAYER, params } from '../Config';
-import { getAvailableCells } from '../helpers/HelperFunctions';
+import { getAvailableCells, updateAvailableCells } from '../helpers/HelperFunctions';
 import { getScore } from './GameHeuristics';
 
 /// Function to check if there's a winning move available for AI
-export const checkForWinningMove = (board) => {
-  // Get all available moves (cells that are viable for making a move)
-  let moves = getAvailableCells(board);
+export const checkForWinningMove = (board, availableCells) => {
+
   let winningMove = { score: null, rowIndex: null, colIndex: null };
 
   // Iterate over each possible move
-  for (let move of moves) {
+  for (let move of availableCells) {
     // Temporarily make the move on the board
     board[move.rowIndex][move.colIndex] = AI;
 
@@ -38,8 +37,11 @@ export const selectBestMove = (board) => {
   // Initialize a move object to store the best move's row and column indexes
   let move = { rowIndex: null, colIndex: null };
 
+  // Get all available moves (empty cells) from the board
+  let availableCells = getAvailableCells(board);
+
   // Check if there's a winning move available on the board
-  let bestMove = checkForWinningMove(board);
+  let bestMove = checkForWinningMove(board, availableCells);
   // If a winning move is found, use that move
   if (bestMove !== null) {
     move.rowIndex = bestMove.rowIndex;
@@ -49,7 +51,7 @@ export const selectBestMove = (board) => {
     let alpha = params.MIN_SCORE;
     let beta = params.MAX_SCORE;
     // Call the minimax function to find the best move for the current board state
-    bestMove = minimax(board, 0, true, alpha, beta);
+    bestMove = minimax(board, availableCells, params.MAX_DEPTH, true, alpha, beta);
     // If a valid move is found, update the move object with its row and column indexes
     if (bestMove.rowIndex !== null) {
       move.rowIndex = bestMove.rowIndex;
@@ -61,27 +63,35 @@ export const selectBestMove = (board) => {
 };
 
 // Minimax algorithm with alpha-beta pruning
-const minimax = (board, depth, isMaximizing, alpha, beta) => {
+const minimax = (board, availableCells, depth, isMaximizing, alpha, beta) => {
+
   // Base case: Check if the maximum depth is reached or a terminal state
-  if (depth === params.MAX_DEPTH) {
+  if (depth <= 0) {
     // Evaluate the board and return the score along with null move coordinates
-    return { score: evaluateBoardForAI(board, !isMaximizing), rowIndex: null, colIndex: null };
+    return { score: evaluateBoardForAI(board, !isMaximizing, depth), rowIndex: null, colIndex: null };
   }
 
-  // Get all available moves (empty cells) from the board
-  let moves = getAvailableCells(board);
+  let bestMove = null;       // Initialize best move
 
   // Maximizing player logic (AI)
   if (isMaximizing) {
     let bestScore = -Infinity; // Initialize best score to the lowest possible value
-    let bestMove = null;       // Initialize best move
-    for (let move of moves) {
+    for (let move of availableCells) {
+      // Store the original available cells before the move
+      const originalAvailableCells = [...availableCells];
       // Simulate the move
       board[move.rowIndex][move.colIndex] = AI;
+      let newAvailableCells = updateAvailableCells(availableCells, move, board);
       // Recursively call minimax for the next level (minimizing player)
-      let subTreeMove = minimax(board, depth + 1, false, alpha, beta);
+      let subTreeMove = minimax(board, newAvailableCells, depth - 1, false, alpha, beta);
       // Undo the move
       board[move.rowIndex][move.colIndex] = null;
+      availableCells = originalAvailableCells;
+
+      // Check for early termination if winning score is found
+      if (subTreeMove.score >= params.MAX_SCORE) {
+        return { score: subTreeMove.score, rowIndex: move.rowIndex, colIndex: move.colIndex };
+      }
 
       // Update the best score and move if a better score is found
       if (subTreeMove.score > bestScore) {
@@ -92,22 +102,28 @@ const minimax = (board, depth, isMaximizing, alpha, beta) => {
 
       // Alpha-beta pruning
       if (alpha >= beta) {
-        break;
+        return subTreeMove;
       }
     }
-    return bestMove; // Return the best move found
   }
   // Minimizing player logic
   else {
     let bestScore = Infinity; // Initialize best score to the highest possible value
-    let bestMove = null;      // Initialize best move
-    for (let move of moves) {
+    for (let move of availableCells) {
+      // Store the original available cells before the move
+      const originalAvailableCells = [...availableCells];
       // Simulate the move
       board[move.rowIndex][move.colIndex] = PLAYER;
+      let newAvailableCells = updateAvailableCells(availableCells, move, board);
       // Recursively call minimax for the next level (maximizing player)
-      let subTreeMove = minimax(board, depth + 1, true, alpha, beta);
+      let subTreeMove = minimax(board, newAvailableCells, depth - 1, true, alpha, beta);
       // Undo the move
       board[move.rowIndex][move.colIndex] = null;
+      availableCells = originalAvailableCells;
+
+      if (subTreeMove.score <= -params.MAX_SCORE) {
+        return { score: subTreeMove.score, rowIndex: move.rowIndex, colIndex: move.colIndex };
+      }
 
       // Update the best score and move if a better score is found
       if (subTreeMove.score < bestScore) {
@@ -118,18 +134,18 @@ const minimax = (board, depth, isMaximizing, alpha, beta) => {
 
       // Alpha-beta pruning
       if (alpha >= beta) {
-        break;
+        return subTreeMove;
       }
     }
-    return bestMove; // Return the best move found
   }
+  return bestMove;
 };
 
 // Function to evaluate the board from the AI's perspective
-export const evaluateBoardForAI = (board, isAiTurn) => {
+export const evaluateBoardForAI = (board, playerTurn) => {
   // Calculate scores for AI and player
-  const aiScore = getScore(board, true, isAiTurn);
-  const playerScore = getScore(board, false, isAiTurn);
+  const aiScore = getScore(board, true, playerTurn);
+  const playerScore = getScore(board, false, playerTurn);
 
   // If player has no score, return AI's score
   if (playerScore === 0) return aiScore;

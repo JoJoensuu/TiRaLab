@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { getAvailableCells } from './HelperFunctions';
+import { getAvailableCells, updateAvailableCells, revertAvailableCells } from './HelperFunctions';
 import { PLAYER, AI } from '../Config';
 
 describe('getAvailableCells', () => {
@@ -14,10 +14,16 @@ describe('getAvailableCells', () => {
     expect(availableCells.length).toEqual(0);
   });
 
-  test('returns correct amount of cells after a player move', () => {
+  test('returns correct amount of cells after a player move into a corner', () => {
     board[0][0] = PLAYER;
     const availableCells = getAvailableCells(board);
-    expect(availableCells.length).toEqual(3);
+    expect(availableCells.length).toEqual(8);
+  });
+
+  test('returns correct amount of cells from the middle of the board', () => {
+    board[9][9] = PLAYER;
+    const availableCells = getAvailableCells(board);
+    expect(availableCells.length).toEqual(24);
   });
 
   test('returns correct amount of cells when no cells available', () => {
@@ -37,6 +43,57 @@ describe('getAvailableCells', () => {
     board[2][6] = board[2][7] = board[3][6] = board[3][7] = AI;
 
     const availableCells = getAvailableCells(board);
-    expect(availableCells.length).toEqual(25);
+    expect(availableCells.length).toEqual(48);
+  });
+});
+
+describe('updateAvailableCells', () => {
+  let board;
+  it('should add new adjacent cells and remove the chosen cell', () => {
+    board = [
+      [null, null, null],
+      [null, 'X', null],
+      [null, null, null]
+    ];
+    const availableCells = [{ rowIndex: 1, colIndex: 0 }, { rowIndex: 1, colIndex: 2 }];
+    const move = { rowIndex: 1, colIndex: 1 };
+
+    const updatedCells = updateAvailableCells(availableCells, move, board);
+
+    // New adjacent cells should be added
+    expect(updatedCells).toContainEqual({ rowIndex: 0, colIndex: 1 });
+    expect(updatedCells).toContainEqual({ rowIndex: 2, colIndex: 1 });
+
+    // The chosen cell should be removed
+    expect(updatedCells).not.toContainEqual(move);
+  });
+
+  it('should not add cells outside the board', () => {
+    board = [
+      ['X', null],
+      [null, null]
+    ];
+    const availableCells = [{ rowIndex: 1, colIndex: 1 }];
+    const move = { rowIndex: 0, colIndex: 0 };
+
+    const updatedCells = updateAvailableCells(availableCells, move, board);
+
+    // No new cells outside the board should be added
+    expect(updatedCells).toEqual(expect.arrayContaining([{ rowIndex: 1, colIndex: 1 }]));
+  });
+
+  it('should not add duplicate cells', () => {
+    board = Array(20).fill(null).map(() => Array(20).fill(null));
+    board[4][9] = board[6][7] = AI;
+    const availableCells = getAvailableCells(board);
+    expect(availableCells.length).toEqual(39);
+    const move = { rowIndex: 8, colIndex: 5 };
+
+    const updatedCells = updateAvailableCells(availableCells, move, board);
+    expect(updatedCells.length).toEqual(54);
+
+    // Ensure no duplicates
+    const duplicates = updatedCells.filter(cell => cell.rowIndex === 0 && cell.colIndex === 0);
+    expect(duplicates.length).toBe(0);
   });
 });

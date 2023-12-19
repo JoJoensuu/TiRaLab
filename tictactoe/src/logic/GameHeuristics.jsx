@@ -92,67 +92,91 @@ export const checkForWin = (board, rowIndex, colIndex) => {
   return GameState.inProgress;
 };
 
-export const getScore = (board, isAI, isAITurn) => {
+export const getScore = (board, forPlayer, isPlayerTurn) => {
   // Calculate score for horizontal and vertical directions
-  const horizontalScore = evaluateHorizontal(board, isAI, isAITurn);
-  const verticalScore = evaluateVertical(board, isAI, isAITurn);
-  const diagonalScore = evaluateDiagonal(board, isAI, isAITurn);
+  const horizontalScore = evaluateHorizontal(board, forPlayer, isPlayerTurn);
+  const verticalScore = evaluateVertical(board, forPlayer, isPlayerTurn);
+  const diagonalScore = evaluateDiagonal(board, forPlayer, isPlayerTurn);
 
   // Sum the scores from horizontal and vertical evaluations
   return horizontalScore + verticalScore + diagonalScore;
 };
 
-export const evaluateHorizontal = (board, isAI, isAITurn) => {
+export const evaluateHorizontal = (board, forPlayer, isPlayerTurn) => {
   let evaluations = [0, 2, 0]; // [0]: consecutive count, [1]: block count, [2]: score
 
   for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board[i].length; j++) {
-      evaluateDirections(board, i, j, isAI, isAITurn, evaluations);
+    // Check if the row contains any occupied cells
+    if (rowHasOccupiedCells(board[i])) {
+      for (let j = 0; j < board[i].length; j++) {
+        evaluateDirections(board, i, j, forPlayer, isPlayerTurn, evaluations);
+      }
+      evaluateDirectionsAfterOnePass(evaluations, forPlayer, isPlayerTurn);
     }
-    evaluateDirectionsAfterOnePass(evaluations, isAI, isAITurn);
   }
 
   return evaluations[2];
 };
 
-export const evaluateVertical = (board, isAI, isAITurn) => {
+export const evaluateVertical = (board, forPlayer, isPlayerTurn) => {
   let evaluations = [0, 2, 0]; // [0]: consecutive count, [1]: block count, [2]: score
 
   for (let j = 0; j < board[0].length; j++) {
-    for (let i = 0; i < board.length; i++) {
-      evaluateDirections(board, i, j, isAI, isAITurn, evaluations);
+    // Check if the column contains any occupied cells
+    if (columnHasOccupiedCells(board, j)) {
+      for (let i = 0; i < board.length; i++) {
+        evaluateDirections(board, i, j, forPlayer, isPlayerTurn, evaluations);
+      }
+      evaluateDirectionsAfterOnePass(evaluations, forPlayer, isPlayerTurn);
     }
-    evaluateDirectionsAfterOnePass(evaluations, isAI, isAITurn);
   }
 
   return evaluations[2];
 };
 
-export const evaluateDiagonal = (board, isAI, isAITurn) => {
+export const evaluateDiagonal = (board, forPlayer, isPlayerTurn) => {
   let evaluations = [0, 2, 0];
   const boardSize = board.length;
 
+  // Helper function to check if a diagonal has any occupied cells
+  const diagonalHasOccupiedCells = (board, k, isMajor) => {
+    let iStart = isMajor ? Math.max(0, k - boardSize + 1) : Math.max(0, k);
+    let iEnd = isMajor ? Math.min(boardSize - 1, k) : Math.min(boardSize + k - 1, boardSize - 1);
+    for (let i = iStart; i <= iEnd; ++i) {
+      let j = isMajor ? k - i : i - k;
+      if (board[i][j] !== null) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   // From bottom-left to top-right diagonally
   for (let k = 0; k <= 2 * (boardSize - 1); k++) {
-    let iStart = Math.max(0, k - boardSize + 1);
-    let iEnd = Math.min(boardSize - 1, k);
-    for (let i = iStart; i <= iEnd; ++i) {
-      evaluateDirections(board, i, k - i, isAI, isAITurn, evaluations);
+    if (diagonalHasOccupiedCells(board, k, true)) {
+      let iStart = Math.max(0, k - boardSize + 1);
+      let iEnd = Math.min(boardSize - 1, k);
+      for (let i = iStart; i <= iEnd; ++i) {
+        evaluateDirections(board, i, k - i, forPlayer, isPlayerTurn, evaluations);
+      }
+      evaluateDirectionsAfterOnePass(evaluations, forPlayer, isPlayerTurn);
     }
-    evaluateDirectionsAfterOnePass(evaluations, isAI, isAITurn);
   }
 
   // From top-left to bottom-right diagonally
   for (let k = 1 - boardSize; k < boardSize; k++) {
-    let iStart = Math.max(0, k);
-    let iEnd = Math.min(boardSize + k - 1, boardSize - 1);
-    for (let i = iStart; i <= iEnd; ++i) {
-      evaluateDirections(board, i, i - k, isAI, isAITurn, evaluations);
+    if (diagonalHasOccupiedCells(board, k, false)) {
+      let iStart = Math.max(0, k);
+      let iEnd = Math.min(boardSize + k - 1, boardSize - 1);
+      for (let i = iStart; i <= iEnd; ++i) {
+        evaluateDirections(board, i, i - k, forPlayer, isPlayerTurn, evaluations);
+      }
+      evaluateDirectionsAfterOnePass(evaluations, forPlayer, isPlayerTurn);
     }
-    evaluateDirectionsAfterOnePass(evaluations, isAI, isAITurn);
   }
   return evaluations[2];
 };
+
 
 // Function to calculate the score based on the number of consecutive marks, how many ends are blocked, and whose turn it is
 export const getConsecutiveScore = (count, blocked, currentTurn) => {
@@ -241,12 +265,22 @@ export const evaluateDirections = (board, rowIndex, colIndex, isAI, isAITurn, sc
   }
 };
 
-export const evaluateDirectionsAfterOnePass = (scoreData, isAI, isAITurn) => {
+export const evaluateDirectionsAfterOnePass = (scoreData, isAI, isPlayerTurn) => {
   // If there were any consecutive AI marks before reaching the end
   if (scoreData[0] > 0) {
-    scoreData[2] += getConsecutiveScore(scoreData[0], scoreData[1], isAI === isAITurn);
+    scoreData[2] += getConsecutiveScore(scoreData[0], scoreData[1], isAI === isPlayerTurn);
   }
   // Reset consecutive marks and block count
   scoreData[0] = 0;
   scoreData[1] = 2;
+};
+
+// Helper function to check if a row has any occupied cells
+const rowHasOccupiedCells = (row) => {
+  return row.some(cell => cell !== null);
+};
+
+// Helper function to check if a column has any occupied cells
+const columnHasOccupiedCells = (board, columnIndex) => {
+  return board.some(row => row[columnIndex] !== null);
 };

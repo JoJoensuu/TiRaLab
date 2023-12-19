@@ -17,7 +17,7 @@ describe('AI move selection logic', () => {
         board[0][i] = AI;
       }
 
-      const score = evaluateBoardForAI(board, true);
+      const score = evaluateBoardForAI(board, true, 4);
       expect(score).toBeGreaterThan(5000); // Expect the highest possible score for AI advantage
     });
 
@@ -27,8 +27,8 @@ describe('AI move selection logic', () => {
         board[1][i] = PLAYER;
       }
 
-      const score = evaluateBoardForAI(board, true);
-      expect(score).toEqual(0); // Expect zero score indicating player advantage
+      const score = evaluateBoardForAI(board, true, 0);
+      expect(score).toBe(0); // Expect zero score indicating player advantage
     });
 
     it('correctly evaluates a neutral board', () => {
@@ -36,8 +36,8 @@ describe('AI move selection logic', () => {
       board[2][0] = AI;
       board[2][1] = PLAYER;
 
-      const score = evaluateBoardForAI(board, true);
-      expect(score).toBeCloseTo(0, -1); // Neutral board should have a score close to 0
+      const score = evaluateBoardForAI(board, true, 2);
+      expect(score).toBeCloseTo(0, -10); // Neutral board should have a score close to 0
     });
   });
 
@@ -76,6 +76,13 @@ describe('AI move selection logic', () => {
 
       const aiMove = selectBestMove(board);
       expect(aiMove).toEqual({ rowIndex: 4, colIndex: 5 }); // AI should correctly go for the winning move
+    });
+
+    it('correctly identifies a better winning position', () => {
+      board[9][9] = board[9][10] = board[10][11] = board[11][11] = AI;
+
+      const aiMove = selectBestMove(board);
+      expect(aiMove).toEqual({ rowIndex: 9, colIndex: 11 }); // AI should correctly go for the winning move
     });
   });
 

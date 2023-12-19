@@ -10,5 +10,5 @@ export const scores = {
 export const params = {
   MIN_SCORE: -1,
   MAX_SCORE: 10000000,
-  MAX_DEPTH: 5,
+  MAX_DEPTH: 4,
 };

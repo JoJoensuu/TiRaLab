@@ -178,7 +178,7 @@ describe('Tic-Tac-Toe Win Logic', () => {
         board[0][i] = AI;
       }
 
-      const score = evaluateHorizontal(board, true, true);
+      const score = evaluateHorizontal(board, true, true, { rowIndex: 0, colIndex: 3 });
       expect(score).toBe(5000); // Expect a near max score for AI advantage
     });
 
@@ -188,7 +188,7 @@ describe('Tic-Tac-Toe Win Logic', () => {
         board[0][i] = AI;
       }
 
-      const score = evaluateHorizontal(board, false, true);
+      const score = evaluateHorizontal(board, false, true, { rowIndex: 0, colIndex: 3 });
       expect(score).toEqual(0); // Expect a positive score for AI's advantage
     });
 
@@ -199,8 +199,18 @@ describe('Tic-Tac-Toe Win Logic', () => {
       }
       board[1][3] = PLAYER;
 
-      const score = evaluateHorizontal(board, true, true);
+      const score = evaluateHorizontal(board, true, true, { rowIndex: 1, colIndex: 3 });
       expect(score).toBe(0); // Expect a score less than a win, as the line is blocked
+    });
+
+    it('correctly evaluates a potential win for AI horizontally without lastMove as a param', () => {
+      // Set up a board where AI is about to win horizontally
+      for (let i = 0; i < 4; i++) {
+        board[0][i] = AI;
+      }
+
+      const score = evaluateHorizontal(board, true, true);
+      expect(score).toBe(5000); // Expect a near max score for AI advantage
     });
   });
 
@@ -273,7 +283,7 @@ describe('Tic-Tac-Toe Win Logic', () => {
       board[1][5] = board[1][6] = board[1][7] = board[1][8] = AI;
       board[2][6] = board[2][7] = board[3][6] = board[3][7] = AI;
 
-      const score = getScore(board, true, true);
+      const score = getScore(board, true, true, { rowIndex: 4, colIndex: 7 });
       expect(score).toBeGreaterThan(50000);
     });
   });
