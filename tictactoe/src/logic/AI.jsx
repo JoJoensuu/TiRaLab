@@ -132,6 +132,7 @@ const minimax = (board, availableCells, depth, isMaximizing, alpha, beta) => {
         beta = Math.min(beta, bestScore); // Update beta for alpha-beta pruning
       }
 
+
       // Alpha-beta pruning
       if (alpha >= beta) {
         return subTreeMove;
@@ -142,14 +143,16 @@ const minimax = (board, availableCells, depth, isMaximizing, alpha, beta) => {
 };
 
 // Function to evaluate the board from the AI's perspective
-export const evaluateBoardForAI = (board, playerTurn) => {
+export const evaluateBoardForAI = (board, playerTurn, depth) => {
   // Calculate scores for AI and player
   const aiScore = getScore(board, true, playerTurn);
   const playerScore = getScore(board, false, playerTurn);
 
-  // If player has no score, return AI's score
-  if (playerScore === 0) return aiScore;
+  const adjustedAIScore = aiScore - depth;
+  const adjustedPlayerScore = playerScore + depth;
+
+  const finalScore = adjustedAIScore / adjustedPlayerScore;
 
   // Otherwise, return the difference between AI's score and player's score
-  return aiScore / playerScore;
+  return finalScore;
 };

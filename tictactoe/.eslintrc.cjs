@@ -43,6 +43,17 @@ module.exports = {
     "no-console": "error",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": 0,
-    "no-unused-vars": 0    
+    "no-unused-vars": 0,
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "CallExpression[callee.object.name='describe'][callee.property.name='only']",
+        "message": "Using 'describe.only' is not allowed."
+      },
+      {
+        "selector": "CallExpression[callee.object.name='it'][callee.property.name='only']",
+        "message": "Using 'it.only' is not allowed."
+      }
+    ]
   },
 }
