@@ -14,11 +14,11 @@ Unittests can be run like so:
 
 Unittests have been implemented for all components. The ones testing the AI and the minimax algorithm are in
 
-[.src/components/GameBoard.test.js](https://github.com/JoJoensuu/TiRaLab/tictactoe/src/components/GameBoard.test.js)
+[GameBoard.test.js](https://github.com/JoJoensuu/TiRaLab/blob/main/tictactoe/src/components/GameBoard.test.js)
 
-`.src/logic/AI.test.js`
+[AI.test.js](https://github.com/JoJoensuu/TiRaLab/blob/main/tictactoe/src/logic/AI.test.js)
 
-`.src/logic/GameHeuristics.test.js`
+[GameHeuristics.test.js](https://github.com/JoJoensuu/TiRaLab/blob/main/tictactoe/src/logic/GameHeuristics.test.js)
 
 Since GameBoard component is responsible for running the whole gameboard app, it made sense to test if the AI could win against a very rudimentary strategy. This is done by testing whether the AI will win within a reasonable time (20 seconds) against an opponent who will place their mark on the first available cell.
 
