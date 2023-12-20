@@ -84,6 +84,14 @@ describe('AI move selection logic', () => {
       const aiMove = selectBestMove(board);
       expect(aiMove).toEqual({ rowIndex: 9, colIndex: 11 }); // AI should correctly go for the winning move
     });
+
+    it('will select a move to block a future win', () => {
+      board[10][10] = board[10][11] = board[11][12] = board[12][12] = PLAYER;
+      board[7][7] = AI;
+
+      const aiMove = selectBestMove(board);
+      expect(aiMove).toEqual({ rowIndex: 10, colIndex: 12 });
+    });
   });
 
   describe('checkForWinningMove', () => {
