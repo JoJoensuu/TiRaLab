@@ -148,11 +148,15 @@ export const evaluateBoardForAI = (board, playerTurn, depth) => {
   const aiScore = getScore(board, true, playerTurn);
   const playerScore = getScore(board, false, playerTurn);
 
+  // Adjust scores for depth
   const adjustedAIScore = aiScore - depth;
   const adjustedPlayerScore = playerScore + depth;
 
-  const finalScore = adjustedAIScore / adjustedPlayerScore;
+  // Account for division by zero errors
+  if (adjustedPlayerScore === 0) {
+    return adjustedAIScore;
+  }
 
-  // Otherwise, return the difference between AI's score and player's score
-  return finalScore;
+  // Otherwise return relative difference of AI and player scores
+  return adjustedAIScore / adjustedPlayerScore;
 };
