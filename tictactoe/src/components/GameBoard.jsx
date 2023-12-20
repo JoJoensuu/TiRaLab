@@ -72,7 +72,7 @@ const GameBoard = ( { gameState, setGameState }) => {
             {row.map((cell, colIndex) => (
               <button
                 key={`${rowIndex}-${colIndex}`}
-                className="cell"
+                className={`cell ${cell === 'X' ? 'cell-x' : cell === 'O' ? 'cell-o' : ''}`}
                 data-testid={`cell-${rowIndex}-${colIndex}`}
                 onClick={() => handleCellClick(rowIndex, colIndex)}>
                 {cell}
