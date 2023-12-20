@@ -9,7 +9,7 @@
 - [Instructions](https://github.com/JoJoensuu/TiRaLab/blob/main/tictactoe/README.md)
 - [Specification document](https://github.com/JoJoensuu/TiRaLab/blob/main/docs/specif.md)
 - [Implementation document](https://github.com/JoJoensuu/TiRaLab/blob/main/docs/implementation.md)
-- [Testing document]
+- [Testing document](https://github.com/JoJoensuu/TiRaLab/blob/main/docs/testing.md)
 
 ## Weekly Reports
 
