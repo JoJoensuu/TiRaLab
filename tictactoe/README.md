@@ -26,7 +26,7 @@ To install and run TicTacToe project, follow these steps:
      ```
      npm run dev
      ```
-   - Vite will start the dev server, usually accessible at `http://localhost:3000`.
+   - Vite will start the dev server, usually accessible at `http://localhost:5173`.
 
 5. **Access the Application**
    - Open the provided URL in your web browser to view the React application.
