@@ -53,7 +53,9 @@ describe('AI move selection logic', () => {
       board[0][11] = PLAYER;
       board[0][12] = PLAYER;
 
-      const aiMove = selectBestMove(board);
+      let moveOptions = getAvailableCells(board);
+
+      const aiMove = selectBestMove(board, moveOptions);
       expect(aiMove).toEqual({ rowIndex: 0, colIndex: 9 }); // AI should block the player
     });
 
@@ -61,7 +63,9 @@ describe('AI move selection logic', () => {
       // Setup a board where the player has a horizontal row with 1 piece missing
       board[0][0] = board[0][1] = board[0][2] = board[0][3] = PLAYER;
 
-      const aiMove = selectBestMove(board);
+      let moveOptions = getAvailableCells(board);
+
+      const aiMove = selectBestMove(board, moveOptions);
       expect(aiMove).toEqual({ rowIndex: 0, colIndex: 4 }); // AI should correctly block the player move
     });
 
@@ -74,14 +78,18 @@ describe('AI move selection logic', () => {
       board[1][5] = board[1][6] = board[1][7] = board[1][8] = AI;
       board[2][6] = board[2][7] = board[3][6] = board[3][7] = AI;
 
-      const aiMove = selectBestMove(board);
+      let moveOptions = getAvailableCells(board);
+
+      const aiMove = selectBestMove(board, moveOptions);
       expect(aiMove).toEqual({ rowIndex: 4, colIndex: 5 }); // AI should correctly go for the winning move
     });
 
     it('correctly identifies a better winning position', () => {
       board[9][9] = board[9][10] = board[10][11] = board[11][11] = AI;
 
-      const aiMove = selectBestMove(board);
+      let moveOptions = getAvailableCells(board);
+
+      const aiMove = selectBestMove(board, moveOptions);
       expect(aiMove).toEqual({ rowIndex: 9, colIndex: 11 }); // AI should correctly go for the winning move
     });
 
@@ -89,7 +97,9 @@ describe('AI move selection logic', () => {
       board[10][10] = board[10][11] = board[11][12] = board[12][12] = PLAYER;
       board[7][7] = AI;
 
-      const aiMove = selectBestMove(board);
+      let moveOptions = getAvailableCells(board);
+
+      const aiMove = selectBestMove(board, moveOptions);
       expect(aiMove).toEqual({ rowIndex: 10, colIndex: 12 });
     });
   });
