@@ -5,17 +5,19 @@ import { GameState } from './GameState';
 import { PLAYER, AI } from '../Config';
 import { Reset } from './Reset';
 import { selectBestMove } from '../logic/AI';
+import { getAvailableCells, updateAvailableCells } from '../helpers/HelperFunctions';
 
 const GameBoard = ( { gameState, setGameState }) => {
   // State for the game board and current player
   const [board, setBoard] = useState(Array(20).fill(null).map(() => Array(20).fill(null)));
+  const [moveOptions, setMoveOptions] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(PLAYER);
 
   // Effect hook for handling AI's turn
   useEffect(() => {
     if (currentPlayer === AI && gameState === GameState.inProgress) {
       // Determine the best move for AI
-      const aiMove = selectBestMove(board);
+      const aiMove = selectBestMove(board, moveOptions);
       if (aiMove) {
         // Update the board with AI's move
         const newBoard = board.map((row, rIdx) =>
@@ -26,6 +28,9 @@ const GameBoard = ( { gameState, setGameState }) => {
         // Check for a win or change in game state after AI's move
         const newGameState = checkForWin(newBoard, aiMove.rowIndex, aiMove.colIndex);
         setGameState(newGameState);
+
+        const newMoveOptions = updateAvailableCells(moveOptions, aiMove, newBoard);
+        setMoveOptions(newMoveOptions);
 
         // Change turn back to PLAYER
         setCurrentPlayer(PLAYER);
@@ -49,6 +54,15 @@ const GameBoard = ( { gameState, setGameState }) => {
     // Check for a win or change in game state after PLAYER's move
     const newGameState = checkForWin(newBoard, rowIndex, colIndex, currentPlayer);
     setGameState(newGameState);
+
+
+    if (moveOptions.length <= 0) {
+      const newMoveOptions = getAvailableCells(newBoard);
+      setMoveOptions(newMoveOptions);
+    } else {
+      const newMoveOptions = updateAvailableCells(moveOptions, { rowIndex, colIndex }, newBoard);
+      setMoveOptions(newMoveOptions);
+    }
 
     // Change turn to AI
     currentPlayer === PLAYER ? setCurrentPlayer(AI) : setCurrentPlayer(PLAYER);

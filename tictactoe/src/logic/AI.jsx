@@ -1,5 +1,5 @@
 import { AI, PLAYER, params } from '../Config';
-import { getAvailableCells, updateAvailableCells } from '../helpers/HelperFunctions';
+import { updateAvailableCells } from '../helpers/HelperFunctions';
 import { getScore } from './GameHeuristics';
 
 /// Function to check if there's a winning move available for AI
@@ -33,12 +33,11 @@ export const checkForWinningMove = (board, availableCells) => {
 };
 
 // Function to select the best move for the AI
-export const selectBestMove = (board) => {
+export const selectBestMove = (board, moveOptions) => {
   // Initialize a move object to store the best move's row and column indexes
   let move = { rowIndex: null, colIndex: null };
 
-  // Get all available moves (empty cells) from the board
-  let availableCells = getAvailableCells(board);
+  let availableCells = moveOptions;
 
   // Check if there's a winning move available on the board
   let bestMove = checkForWinningMove(board, availableCells);

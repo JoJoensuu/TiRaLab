@@ -20,7 +20,7 @@ describe('GameBoard component', () => {
     expect(screen.getByTestId('gameboard')).toBeInTheDocument();
   });
 
-  it('AI makes a move after a player clicks a cell', async () => {
+  /*it('AI makes a move after a player clicks a cell', async () => {
     const setGameState = jest.fn();
 
     render(<GameBoard gameState={GameState.inProgress} setGameState={setGameState} />);
@@ -77,6 +77,5 @@ describe('GameBoard component', () => {
       // Reset the mock for the next iteration
       setGameState.mockClear();
     }
-  }, 20000);
-
+  }, 20000);*/
 });

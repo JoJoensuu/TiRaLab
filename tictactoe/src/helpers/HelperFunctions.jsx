@@ -52,3 +52,14 @@ export const updateAvailableCells = (availableCells, move, board) => {
 
   return newAvailableCells;
 };
+
+export const handleAvailableCellsUpdate = (availableCells, move, board) => {
+  if (availableCells.length <= 0) {
+    const boardState = getAvailableCells(board);
+    return boardState;
+  } else {
+    const newMove = [move.rowIndex, move.colIndex];
+    const boardState = updateAvailableCells(availableCells, newMove, board);
+    return boardState;
+  }
+};
