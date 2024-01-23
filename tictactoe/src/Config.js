@@ -1,5 +1,6 @@
 export const PLAYER = 'X';
 export const AI = 'O';
+export const STARTING_PLAYER = AI;
 
 export const scores = {
   WIN_SCORE: 10,
@@ -8,7 +9,9 @@ export const scores = {
 };
 
 export const params = {
-  MIN_SCORE: -1,
-  MAX_SCORE: 10000000,
-  MAX_DEPTH: 4,
+  MIN_SCORE: -10,
+  MAX_SCORE: 10,
+  MAX_DEPTH: 5,
+  GRID_SIZE: 20,
+  WINNING_STRAIGHT: 5,
 };

@@ -2,22 +2,27 @@ import { useState, useEffect } from 'react';
 import './GameBoard.css';
 import { checkForWin } from '../logic/GameHeuristics';
 import { GameState } from './GameState';
-import { PLAYER, AI } from '../Config';
+import { PLAYER, AI, params, STARTING_PLAYER } from '../Config';
 import { Reset } from './Reset';
 import { selectBestMove } from '../logic/AI';
 import { getAvailableCells, updateAvailableCells } from '../helpers/HelperFunctions';
 
 const GameBoard = ( { gameState, setGameState }) => {
   // State for the game board and current player
-  const [board, setBoard] = useState(Array(20).fill(null).map(() => Array(20).fill(null)));
+  const [board, setBoard] = useState(Array(params.GRID_SIZE).fill(null).map(() => Array(params.GRID_SIZE).fill(null)));
   const [moveOptions, setMoveOptions] = useState([]);
-  const [currentPlayer, setCurrentPlayer] = useState(PLAYER);
+  const [currentPlayer, setCurrentPlayer] = useState(STARTING_PLAYER);
 
   // Effect hook for handling AI's turn
   useEffect(() => {
     if (currentPlayer === AI && gameState === GameState.inProgress) {
+      let aiMove;
+      if (moveOptions.length <= 0) {
+        aiMove = { rowIndex: 9, colIndex: 9 };
+      } else {
+        aiMove = selectBestMove(board, moveOptions);
+      }
       // Determine the best move for AI
-      const aiMove = selectBestMove(board, moveOptions);
       if (aiMove) {
         // Update the board with AI's move
         const newBoard = board.map((row, rIdx) =>
@@ -26,11 +31,16 @@ const GameBoard = ( { gameState, setGameState }) => {
         setBoard(newBoard);
 
         // Check for a win or change in game state after AI's move
-        const newGameState = checkForWin(newBoard, aiMove.rowIndex, aiMove.colIndex);
+        const newGameState = checkForWin(newBoard, aiMove);
         setGameState(newGameState);
 
-        const newMoveOptions = updateAvailableCells(moveOptions, aiMove, newBoard);
-        setMoveOptions(newMoveOptions);
+        if (moveOptions.length <= 0) {
+          const newMoveOptions = getAvailableCells(newBoard);
+          setMoveOptions(newMoveOptions);
+        } else {
+          const newMoveOptions = updateAvailableCells(moveOptions, aiMove, newBoard);
+          setMoveOptions(newMoveOptions);
+        }
 
         // Change turn back to PLAYER
         setCurrentPlayer(PLAYER);
@@ -51,8 +61,10 @@ const GameBoard = ( { gameState, setGameState }) => {
     newBoard[rowIndex][colIndex] = currentPlayer;
     setBoard(newBoard);
 
+    let playerMove = { rowIndex: rowIndex, colIndex: colIndex };
+
     // Check for a win or change in game state after PLAYER's move
-    const newGameState = checkForWin(newBoard, rowIndex, colIndex, currentPlayer);
+    const newGameState = checkForWin(newBoard, playerMove);
     setGameState(newGameState);
 
 
@@ -60,7 +72,7 @@ const GameBoard = ( { gameState, setGameState }) => {
       const newMoveOptions = getAvailableCells(newBoard);
       setMoveOptions(newMoveOptions);
     } else {
-      const newMoveOptions = updateAvailableCells(moveOptions, { rowIndex, colIndex }, newBoard);
+      const newMoveOptions = updateAvailableCells(moveOptions, playerMove, newBoard);
       setMoveOptions(newMoveOptions);
     }
 
@@ -72,8 +84,9 @@ const GameBoard = ( { gameState, setGameState }) => {
   const handleReset = () => {
     // Reset the game state, board, and current player
     setGameState(GameState.inProgress);
-    setBoard(Array(20).fill(null).map(() => Array(20).fill(null)));
-    setCurrentPlayer(PLAYER);
+    setMoveOptions([]);
+    setBoard(Array(params.GRID_SIZE).fill(null).map(() => Array(params.GRID_SIZE).fill(null)));
+    setCurrentPlayer(STARTING_PLAYER);
   };
 
   // Render the game board and reset button

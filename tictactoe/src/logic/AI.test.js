@@ -1,6 +1,6 @@
-import { selectBestMove, evaluateBoardForAI, checkForWinningMove } from './AI';
-import { getAvailableCells } from '../helpers/HelperFunctions';
-import { AI, PLAYER } from '../Config';
+import { selectBestMove, evaluateBoardForAI, checkForWinningMove, minimax } from './AI';
+import { getAvailableCells, updateAvailableCells } from '../helpers/HelperFunctions';
+import { AI, PLAYER, params } from '../Config';
 
 describe('AI move selection logic', () => {
   let board;
@@ -8,7 +8,7 @@ describe('AI move selection logic', () => {
   describe('evaluateBoardForAI', () => {
 
     beforeEach(() => {
-      board = Array(20).fill(null).map(() => Array(20).fill(null));
+      board = Array(params.GRID_SIZE).fill(null).map(() => Array(params.GRID_SIZE).fill(null));
     });
 
     it('correctly evaluates a strong AI advantage', () => {
@@ -44,7 +44,7 @@ describe('AI move selection logic', () => {
   describe('selectBestMove', () => {
     // Setup an empty board
     beforeEach(() => {
-      board = Array(20).fill(null).map(() => Array(20).fill(null));
+      board = Array(params.GRID_SIZE).fill(null).map(() => Array(params.GRID_SIZE).fill(null));
     });
 
     it('AI tries to block one side when player has 3 pieces in a row', () => {
@@ -102,11 +102,34 @@ describe('AI move selection logic', () => {
       const aiMove = selectBestMove(board, moveOptions);
       expect(aiMove).toEqual({ rowIndex: 10, colIndex: 12 });
     });
+
+    it('correctly tries to build a winning position while blocking the player from winning', () => {
+      board[6][5] = board[7][5] = board[7][6] = AI;
+      board[4][12] = board[5][12] = board[6][12] = PLAYER;
+
+      let availableCells = getAvailableCells(board);
+
+      let firstAIMove = selectBestMove(board, availableCells);
+
+      expect(firstAIMove).toEqual({ rowIndex: 3, colIndex: 12 });
+
+      board[3][12] = AI;
+
+      board[7][12] = PLAYER;
+
+      let playerFirstMove = { rowIndex: 7, colIndex: 12 };
+
+      let newAvailableCells = updateAvailableCells(availableCells, playerFirstMove, board);
+
+      let secondAIMove = selectBestMove(board, newAvailableCells);
+
+      expect(secondAIMove).toEqual({ rowIndex: 8, colIndex: 12 });
+    });
   });
 
   describe('checkForWinningMove', () => {
     beforeEach(() => {
-      board = Array(20).fill(null).map(() => Array(20).fill(null));
+      board = Array(params.GRID_SIZE).fill(null).map(() => Array(params.GRID_SIZE).fill(null));
     });
 
     it('identifies a winning move with one side blocked', () => {
@@ -165,4 +188,26 @@ describe('AI move selection logic', () => {
       expect(winningMove).toBeNull(); // No immediate winning move
     });
   });
+});
+
+describe.only('minimax', () => {
+  let board;
+  // Setup an empty board
+  beforeEach(() => {
+    board = Array(params.GRID_SIZE).fill(null).map(() => Array(params.GRID_SIZE).fill(null));
+  });
+
+  it('basic minimax test', () => {
+    board[0][0] = board[1][0] = board[2][0] = board[3][0] = PLAYER;
+
+    board[0][1] = board[0][2] = board[0][3] = AI;
+
+    let availableCells = getAvailableCells(board);
+
+    let bestMove = minimax(board, availableCells, 5, true, -10, 10);
+
+    expect(bestMove).toEqual({ score: 0, rowIndex: 3, colIndex: 4 });
+  });
+
+
 });

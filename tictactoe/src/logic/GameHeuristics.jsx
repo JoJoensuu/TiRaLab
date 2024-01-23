@@ -8,13 +8,13 @@ const checkHorizontal = (board, rowIndex, colIndex, currentPlayer) => {
   // Check to the left
   for (let i = colIndex - 1; i >= 0 && board[rowIndex][i] === currentPlayer; i--) {
     count++;
-    if (count >= 5) return true; // Win condition met
+    if (count >= params.WINNING_STRAIGHT) return true; // Win condition met
   }
 
   // Check to the right
   for (let i = colIndex + 1; i < board[rowIndex].length && board[rowIndex][i] === currentPlayer; i++) {
     count++;
-    if (count >= 5) return true; // Win condition met
+    if (count >= params.WINNING_STRAIGHT) return true; // Win condition met
   }
   return false;
 };
@@ -25,12 +25,12 @@ const checkVertical = (board, rowIndex, colIndex, currentPlayer) => {
   // Check up
   for (let i = rowIndex - 1; i >= 0 && board[i][colIndex] === currentPlayer; i--) {
     count++;
-    if (count >= 5) return true; // Win condition met
+    if (count >= params.WINNING_STRAIGHT) return true; // Win condition met
   }
   // Check down
   for (let i = rowIndex + 1; i < board[colIndex].length && board[i][colIndex] === currentPlayer; i++) {
     count++;
-    if (count >= 5) return true; // Win condition met
+    if (count >= params.WINNING_STRAIGHT) return true; // Win condition met
   }
   return false;
 };
@@ -42,12 +42,12 @@ const checkDiagonal = (board, rowIndex, colIndex, currentPlayer) => {
   // Check upper left
   for (let i = rowIndex - 1, j = colIndex - 1; i >= 0 && j >= 0 && board[i][j] === currentPlayer; i--, j--) {
     count++;
-    if (count >= 5) return true;
+    if (count >= params.WINNING_STRAIGHT) return true;
   }
   // Check lower right
   for (let i = rowIndex + 1, j = colIndex + 1; i < board.length && j < board[i].length && board[i][j] === currentPlayer; i++, j++) {
     count++;
-    if (count >= 5) return true;
+    if (count >= params.WINNING_STRAIGHT) return true;
   }
 
   // Reset count for minor diagonal
@@ -57,19 +57,21 @@ const checkDiagonal = (board, rowIndex, colIndex, currentPlayer) => {
   // Check upper right
   for (let i = rowIndex - 1, j = colIndex + 1; i >= 0 && j < board[i].length && board[i][j] === currentPlayer; i--, j++) {
     count++;
-    if (count >= 5) return true;
+    if (count >= params.WINNING_STRAIGHT) return true;
   }
   // Check lower left
   for (let i = rowIndex + 1, j = colIndex - 1; i < board.length && j >= 0 && board[i][j] === currentPlayer; i++, j--) {
     count++;
-    if (count >= 5) return true;
+    if (count >= params.WINNING_STRAIGHT) return true;
   }
 
   return false;
 };
 
 // Function to check for a win or draw in the game
-export const checkForWin = (board, rowIndex, colIndex) => {
+export const checkForWin = (board, move) => {
+  let rowIndex = move.rowIndex;
+  let colIndex = move.colIndex;
   // Identify the current player based on the last move
   const currentPlayer = board[rowIndex][colIndex];
 
