@@ -38,8 +38,6 @@ export const selectBestMove = (board, moveOptions) => {
   // Check if there's a winning move available on the board
   let bestMove = checkForWinningMove(board, availableCells);
 
-  console.log(bestMove);
-
   // If a winning move is found, use that move
   if (bestMove !== null) {
     move.rowIndex = bestMove.rowIndex;
