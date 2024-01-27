@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { getAvailableCells, updateAvailableCells, revertAvailableCells, handleAvailableCellsUpdate } from './HelperFunctions';
+import { getAvailableCells, updateAvailableCells } from './HelperFunctions';
 import { PLAYER, AI } from '../Config';
 
 describe('getAvailableCells', () => {
@@ -95,32 +95,5 @@ describe('updateAvailableCells', () => {
     // Ensure no duplicates
     const duplicates = updatedCells.filter(cell => cell.rowIndex === 0 && cell.colIndex === 0);
     expect(duplicates.length).toBe(0);
-  });
-});
-
-describe('handleAvailableCellsUpdate', () => {
-  let board;
-  beforeEach(() => {
-    // Initialize the board before each test
-    board = Array(20).fill(null).map(() => Array(20).fill(null));
-  });
-  let availableCells = [];
-
-  it('should return correct amount of cells after the players initial move', () => {
-    board[10][10] = PLAYER;
-    const move = { rowIndex: 10, colIndex: 10 };
-    const cells = handleAvailableCellsUpdate(availableCells, move, board);
-    expect(cells.length).toBe(24);
-  });
-
-  it('should return correct amount of cells on a full board', () => {
-    for (let i = 0; i < 20; i++) {
-      for (let j = 0; j < 20; j++) {
-        board[i][j] = PLAYER;
-      }
-    }
-    const move = { rowIndex: 19, colIndex: 19 };
-    const cells = handleAvailableCellsUpdate(availableCells, move, board);
-    expect(cells.length).toBe(0);
   });
 });

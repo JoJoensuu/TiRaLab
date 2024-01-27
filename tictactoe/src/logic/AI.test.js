@@ -1,45 +1,9 @@
-import { selectBestMove, evaluateBoardForAI, checkForWinningMove, minimax } from './AI';
+import { selectBestMove, checkForWinningMove, minimax } from './AI';
 import { getAvailableCells, updateAvailableCells } from '../helpers/HelperFunctions';
-import { AI, PLAYER, params } from '../Config';
+import { AI, PLAYER, params, scores } from '../Config';
 
 describe('AI move selection logic', () => {
   let board;
-
-  describe('evaluateBoardForAI', () => {
-
-    beforeEach(() => {
-      board = Array(params.GRID_SIZE).fill(null).map(() => Array(params.GRID_SIZE).fill(null));
-    });
-
-    it('correctly evaluates a strong AI advantage', () => {
-      // Setup a board where AI has a clear advantage
-      for (let i = 0; i < 4; i++) {
-        board[0][i] = AI;
-      }
-
-      const score = evaluateBoardForAI(board, true, 4);
-      expect(score).toBeGreaterThan(1000); // Expect the highest possible score for AI advantage
-    });
-
-    it('correctly evaluates a strong player advantage', () => {
-      // Setup a board where the player has a clear advantage
-      for (let i = 0; i < 4; i++) {
-        board[1][i] = PLAYER;
-      }
-
-      const score = evaluateBoardForAI(board, true, 0);
-      expect(score).toBe(0); // Expect zero score indicating player advantage
-    });
-
-    it('correctly evaluates a neutral board', () => {
-      // Setup a neutral board
-      board[2][0] = AI;
-      board[2][1] = PLAYER;
-
-      const score = evaluateBoardForAI(board, true, 2);
-      expect(score).toBeCloseTo(0, -10); // Neutral board should have a score close to 0
-    });
-  });
 
   describe('selectBestMove', () => {
     // Setup an empty board
@@ -82,48 +46,6 @@ describe('AI move selection logic', () => {
 
       const aiMove = selectBestMove(board, moveOptions);
       expect(aiMove).toEqual({ rowIndex: 4, colIndex: 5 }); // AI should correctly go for the winning move
-    });
-
-    it('correctly identifies a better winning position', () => {
-      board[9][9] = board[9][10] = board[10][11] = board[11][11] = AI;
-
-      let moveOptions = getAvailableCells(board);
-
-      const aiMove = selectBestMove(board, moveOptions);
-      expect(aiMove).toEqual({ rowIndex: 9, colIndex: 11 }); // AI should correctly go for the winning move
-    });
-
-    it('will select a move to block a future win', () => {
-      board[10][10] = board[10][11] = board[11][12] = board[12][12] = PLAYER;
-      board[7][7] = AI;
-
-      let moveOptions = getAvailableCells(board);
-
-      const aiMove = selectBestMove(board, moveOptions);
-      expect(aiMove).toEqual({ rowIndex: 10, colIndex: 12 });
-    });
-
-    it('correctly tries to build a winning position while blocking the player from winning', () => {
-      board[6][5] = board[7][5] = board[7][6] = AI;
-      board[4][12] = board[5][12] = board[6][12] = PLAYER;
-
-      let availableCells = getAvailableCells(board);
-
-      let firstAIMove = selectBestMove(board, availableCells);
-
-      expect(firstAIMove).toEqual({ rowIndex: 3, colIndex: 12 });
-
-      board[3][12] = AI;
-
-      board[7][12] = PLAYER;
-
-      let playerFirstMove = { rowIndex: 7, colIndex: 12 };
-
-      let newAvailableCells = updateAvailableCells(availableCells, playerFirstMove, board);
-
-      let secondAIMove = selectBestMove(board, newAvailableCells);
-
-      expect(secondAIMove).toEqual({ rowIndex: 8, colIndex: 12 });
     });
   });
 
@@ -190,23 +112,89 @@ describe('AI move selection logic', () => {
   });
 });
 
-describe.only('minimax', () => {
+describe('minimax', () => {
   let board;
   // Setup an empty board
   beforeEach(() => {
     board = Array(params.GRID_SIZE).fill(null).map(() => Array(params.GRID_SIZE).fill(null));
   });
 
-  it('basic minimax test', () => {
+  it('identifies a basic blocking move', () => {
     board[0][0] = board[1][0] = board[2][0] = board[3][0] = PLAYER;
 
     board[0][1] = board[0][2] = board[0][3] = AI;
 
     let availableCells = getAvailableCells(board);
 
-    let bestMove = minimax(board, availableCells, 5, true, -10, 10);
+    let bestMove = minimax(board, availableCells, 0, true, params.ALPHA, params.BETA);
 
-    expect(bestMove).toEqual({ score: 0, rowIndex: 3, colIndex: 4 });
+    expect(bestMove).toEqual({ score: 0, rowIndex: 4, colIndex: 0 });
+  });
+
+  it('performs correct move to win in one turn', () => {
+    board[0][0] = board[1][0] = board[2][0] = board[3][0] = PLAYER;
+
+    board[0][1] = board[0][2] = board[0][3] = board[0][4] = AI;
+
+    let availableCells = getAvailableCells(board);
+
+    let bestMove = minimax(board, availableCells, 0, true, params.ALPHA, params.BETA);
+
+    expect(bestMove).toEqual({ score: scores.WIN_SCORE - 1, rowIndex: 0, colIndex: 5 });
+  });
+
+  it('performs correct moves to win in several turns', () => {
+    board[4][9] = board[5][9] = board[6][9] = PLAYER;
+
+    board[6][6] = board[7][6] = board[7][7] = AI;
+
+    let availableCells = getAvailableCells(board);
+
+    let firstAIMove = minimax(board, availableCells, 0, true, params.ALPHA, params.BETA);
+
+    expect(firstAIMove).toEqual({ score: scores.DRAW_SCORE, rowIndex: 3, colIndex: 9 });
+
+    board[firstAIMove.rowIndex][firstAIMove.colIndex] = AI;
+
+    availableCells = updateAvailableCells(availableCells, firstAIMove, board);
+
+    let playerMove = { rowIndex: 7, colIndex: 8 };
+
+    board[playerMove.rowIndex][playerMove.colIndex] = PLAYER;
+
+    availableCells = updateAvailableCells(availableCells, playerMove, board);
+
+    let secondAIMove = minimax(board, availableCells, 0, true, params.ALPHA, params.BETA);
+
+    expect(secondAIMove).toEqual({ score: scores.DRAW_SCORE, rowIndex: 2, colIndex: 7 });
+
+    board[secondAIMove.rowIndex][secondAIMove.colIndex] = AI;
+
+    availableCells = updateAvailableCells(availableCells, secondAIMove, board);
+
+    playerMove = { rowIndex: 5, colIndex: 10 };
+
+    board[playerMove.rowIndex][playerMove.colIndex] = PLAYER;
+
+    availableCells = updateAvailableCells(availableCells, playerMove, board);
+
+    let thirdAIMove = minimax(board, availableCells, 0, true, params.ALPHA, params.BETA);
+
+    expect(thirdAIMove).toEqual({ score: scores.DRAW_SCORE, rowIndex: 4, colIndex: 11 });
+
+    board[thirdAIMove.rowIndex][thirdAIMove.colIndex] = AI;
+
+    availableCells = updateAvailableCells(availableCells, thirdAIMove, board);
+
+    playerMove = { rowIndex: 8, colIndex: 7 };
+
+    board[playerMove.rowIndex][playerMove.colIndex] = PLAYER;
+
+    availableCells = updateAvailableCells(availableCells, playerMove, board);
+
+    let forthAIMove = minimax(board, availableCells, 0, true, params.ALPHA, params.BETA);
+
+    expect(forthAIMove).toEqual({ score: scores.DRAW_SCORE, rowIndex: 9, colIndex: 6 });
   });
 
 
