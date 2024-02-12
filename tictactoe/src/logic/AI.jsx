@@ -54,7 +54,6 @@ export const selectBestMove = (board, moveOptions) => {
       move.colIndex = bestMove.colIndex;
     }
   }
-  console.log(`bestMove is ${move.rowIndex}, ${move.colIndex} with a score of: ${bestMove.score}`);
   // Return the best move found
   return move;
 };
